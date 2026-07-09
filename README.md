@@ -11,36 +11,23 @@ Both official scripts of Serbian (and Montenegrin) map one-to-one at the letter 
 The library is distributed as a git tag (not published to PyPI). Install from GitHub:
 
 ```bash
-pip install git+https://github.com/apakabarlabs/serbian-translit-python.git@v0.1.0
+pip install git+https://github.com/apakabarlabs/serbian-translit-python.git@v0.2.0
 ```
 
 ## Usage
 
 ```python
-from serbian_translit import Transliterator
+from serbian_translit import srp, cnr
 
-srp_lat_to_cyr = Transliterator("srp-latn", "srp-cyrl")
-srp_lat_to_cyr("Njujork")             # 'Њујорк'
-srp_lat_to_cyr("LJUBAV")              # 'ЉУБАВ'
-srp_lat_to_cyr("New York")            # 'New York' (word skipped — has non-native letters)
-srp_lat_to_cyr('grupa „AC/DC"')       # 'група „AC/DC"' (quoted region preserved)
+srp.to_cyr("Njujork")           # 'Њујорк'
+srp.to_cyr("LJUBAV")            # 'ЉУБАВ'
+srp.to_cyr("New York")          # 'New York' (word skipped — has non-native letters)
+srp.to_cyr('grupa „AC/DC"')     # 'група „AC/DC"' (quoted region preserved)
+srp.to_lat("Њујорк")            # 'Njujork'
 
-srp_cyr_to_lat = Transliterator("srp-cyrl", "srp-latn")
-srp_cyr_to_lat("Њујорк")              # 'Njujork'
-
-cnr_lat_to_cyr = Transliterator("cnr-latn", "cnr-cyrl")
-cnr_lat_to_cyr("śever")               # 'с́евер'  (с + U+0301)
-
-cnr_cyr_to_lat = Transliterator("cnr-cyrl", "cnr-latn")
-cnr_cyr_to_lat("с́евер")               # 'śever'
+cnr.to_cyr("śever")             # 'с́евер' (с + U+0301)
+cnr.to_lat("с́евер")             # 'śever'
 ```
-
-## Supported directions
-
-- `srp-latn → srp-cyrl`
-- `srp-cyrl → srp-latn`
-- `cnr-latn → cnr-cyrl`
-- `cnr-cyrl → cnr-latn`
 
 ## Behaviour
 
@@ -56,6 +43,10 @@ cnr_cyr_to_lat("с́евер")               # 'śever'
 
 Rules live in [`serbian_translit/data/rules.yaml`](serbian_translit/data/rules.yaml); test cases in [`serbian_translit/data/tests.yaml`](serbian_translit/data/tests.yaml). Both files are the source of truth shared with the [Swift](https://github.com/apakabarlabs/serbian-translit-swift) and (upcoming) Kotlin ports so behaviour stays identical across languages.
 
-## License
+## Lines of Code
 
-MIT — see [LICENSE](LICENSE).
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/loc-history-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset=".github/loc-history-light.svg">
+  <img alt="Lines of Code graph" src=".github/loc-history-light.svg">
+</picture>

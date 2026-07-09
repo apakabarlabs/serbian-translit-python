@@ -1,13 +1,15 @@
-"""Serbian/Montenegrin script conversion driven by a YAML rule table.
+"""YAML-driven engine for Serbian/Montenegrin script conversion.
 
-The engine is language-agnostic: it plays a source→target mapping from
-`data/rules.yaml`. All script-specific facts (which digraphs, which pre-char
-remaps, which extra word-characters, which non-native letters) live in the
-YAML file, not in this code.
+The engine plays a source→target mapping loaded from ``data/rules.yaml``.
+All script-specific facts (digraphs, pre-char remaps, extra word-characters,
+non-native letters) live in the YAML file, not here. This module is
+internal; the public API is ``serbian_translit.srp`` and
+``serbian_translit.cnr``.
 
-Word-level protection:
-  - Text inside paired quotation marks („…" “…” "…" «…») round-trips verbatim.
-  - Roman numerals (II, XIV, XX…) stay Latin regardless of direction.
+Word-level protection during a conversion:
+  - Paired quoted regions (``„…"``, ``“…”``, ``"…"``, ``«…»``) round-trip
+    verbatim so foreign quotes and brand names survive.
+  - Roman numerals (``II``, ``XIV``, ``XX`` …) stay Latin in either direction.
   - A source-Latin word containing any letter in ``non_native_letters`` is
     treated as a foreign inclusion and left untouched.
 """
@@ -21,29 +23,29 @@ from pathlib import Path
 import yaml
 
 
-class CasePattern(Enum):
+class _CasePattern(Enum):
     LOWER = "lower"
     UPPER = "upper"
     TITLE = "title"
     MIXED = "mixed"
 
 
-def _detect_case(text: str) -> CasePattern:
+def _detect_case(text: str) -> _CasePattern:
     if text.islower():
-        return CasePattern.LOWER
+        return _CasePattern.LOWER
     if text.isupper():
-        return CasePattern.UPPER
+        return _CasePattern.UPPER
     if len(text) > 1 and text[0].isupper() and text[1:].islower():
-        return CasePattern.TITLE
-    return CasePattern.MIXED
+        return _CasePattern.TITLE
+    return _CasePattern.MIXED
 
 
-def _apply_case(text: str, pattern: CasePattern) -> str:
-    if pattern == CasePattern.LOWER:
+def _apply_case(text: str, pattern: _CasePattern) -> str:
+    if pattern == _CasePattern.LOWER:
         return text.lower()
-    if pattern == CasePattern.UPPER:
+    if pattern == _CasePattern.UPPER:
         return text.upper()
-    if pattern == CasePattern.TITLE:
+    if pattern == _CasePattern.TITLE:
         return text[0].upper() + text[1:].lower() if text else text
     return text
 
@@ -56,9 +58,9 @@ _ROMAN_RE = re.compile(r"^[IVXLCDM]{2,}$")
 # The re.DOTALL flag lets a quoted region span a newline (card bodies do).
 _QUOTED_RE = re.compile(
     r"„[^„”“]*?[”“\"]"  # German/Serbian: „ … followed by ” (U+201D) / “ (U+201C) / ASCII "
-    r"|«[^«»]*?»"       # French: « … »
-    r"|“[^“”]*?”"       # English curly: “ … ” (opener U+201C — order matters, German alt tried first)
-    r"|\"[^\"]*?\"",    # ASCII: " … "
+    r"|«[^«»]*?»"  # French: « … »
+    r"|“[^“”]*?”"  # English curly: “ … ” (opener U+201C — order matters, German alt tried first)
+    r"|\"[^\"]*?\"",  # ASCII: " … "
     re.DOTALL,
 )
 
@@ -74,7 +76,6 @@ class _Rule:
         self.singles: dict[str, str] = data.get("singles", {}) or {}
         self.extras_in_word: str = data.get("extras_in_word", "") or ""
         self.non_native_letters: set[str] = set(data.get("non_native_letters", "") or "")
-
         self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(self.extras_in_word)}]+)")
 
     def _convert_word(self, word: str) -> str:
@@ -150,33 +151,18 @@ class _Rule:
         return result
 
 
-class Transliterator:
-    """Convert text between two Serbian/Montenegrin scripts.
+_rules_cache: dict[tuple[str, str], _Rule] | None = None
 
-    ``source`` and ``target`` are the script codes from ``rules.yaml`` — one of
-    ``srp-latn``, ``srp-cyrl``, ``cnr-latn``, ``cnr-cyrl``.
-    """
 
-    _rules_cache: list[_Rule] | None = None
-
-    def __init__(self, source: str, target: str):
-        self._rule = self._find_rule(source, target)
-
-    @classmethod
-    def _load_rules(cls) -> list[_Rule]:
-        if cls._rules_cache is None:
-            path = Path(__file__).parent / "data" / "rules.yaml"
-            with open(path, encoding="utf-8") as f:
-                data = yaml.safe_load(f)
-            cls._rules_cache = [_Rule(entry) for entry in data["rules"]]
-        return cls._rules_cache
-
-    @classmethod
-    def _find_rule(cls, source: str, target: str) -> _Rule:
-        for rule in cls._load_rules():
-            if rule.source == source and rule.target == target:
-                return rule
-        raise ValueError(f"No rule for {source} → {target}. Add it to rules.yaml.")
-
-    def __call__(self, text: str) -> str:
-        return self._rule.apply(text)
+def _load_rule(source: str, target: str) -> _Rule:
+    """Return the compiled rule for a source→target pair. Cached after first load."""
+    global _rules_cache
+    if _rules_cache is None:
+        path = Path(__file__).parent / "data" / "rules.yaml"
+        with open(path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        _rules_cache = {(entry["source"], entry["target"]): _Rule(entry) for entry in data["rules"]}
+    try:
+        return _rules_cache[(source, target)]
+    except KeyError as exc:
+        raise ValueError(f"No rule for {source} → {target} in rules.yaml") from exc
