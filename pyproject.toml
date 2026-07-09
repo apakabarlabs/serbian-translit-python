@@ -1,6 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "serbian-translit"
+dynamic = ["version"]
+description = "Deterministic Serbian and Montenegrin script conversion (Cyrillic ↔ Latin)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Apakabarlabs" }]
+keywords = ["serbian", "montenegrin", "transliteration", "script", "conversion", "cyrillic", "latin", "bcms"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: Serbian",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = ["PyYAML>=6.0"]
+
+[project.urls]
+Homepage = "https://github.com/apakabarlabs/serbian-translit-python"
+Changelog = "https://github.com/apakabarlabs/serbian-translit-python/blob/main/CHANGELOG.md"
+Issues = "https://github.com/apakabarlabs/serbian-translit-python/issues"
+
+[tool.setuptools.packages.find]
+include = ["serbian_translit*"]
+
+[tool.setuptools.package-data]
+serbian_translit = ["data/*.yaml"]
+
+# Single source of truth for the version. `__init__.py.__version__` is
+# resolved at build time by setuptools; runtime code reads the same
+# constant directly.
+[tool.setuptools.dynamic]
+version = { attr = "serbian_translit.__version__" }
+
 [tool.ruff]
 line-length = 120
-target-version = "py311"
+# Match the lowest supported runtime (requires-python above). Bumping
+# either without the other splits ruff's UP autofixes from the versions
+# users actually run.
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [
