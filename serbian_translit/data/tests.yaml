@@ -145,6 +145,19 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
+  - section: "Serbian Latin → Cyrillic — digit-first words still transliterate (M2)"
+    lang: srp
+    direction: to_cyr
+    cases:
+      # A word starting with a digit still contains transliteratable
+      # letters — do not skip it whole.
+      - text: "2brzo za nas"
+        want: "2брзо за нас"
+      - text: "100dinara"
+        want: "100динара"
+      - text: "20god od"
+        want: "20год од"
+
   - section: "Serbian Latin → Cyrillic — MIXED-case brand names left untouched (M1)"
     lang: srp
     direction: to_cyr

@@ -189,10 +189,13 @@ class _Rule:
         for part in parts:
             if not part:
                 continue
-            if not part[0].isalpha():
-                rendered.append(part)
-            else:
+            # A word may start with a digit but still contain letters that
+            # must transliterate (`2brzo`, `100dinara`). Gate on "contains
+            # any alpha", not on the first character.
+            if any(ch.isalpha() for ch in part):
                 rendered.append(self._convert_word(part))
+            else:
+                rendered.append(part)
 
         result = "".join(rendered)
         for key, original in slots.items():
