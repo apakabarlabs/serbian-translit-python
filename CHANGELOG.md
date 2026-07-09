@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.3.0
+
+### Fixed
+- **B1** — NFC-normalise input in `_Rule.apply`. NFD-decomposed sources
+  (macOS clipboard, iOS filenames) used to leak combining marks
+  through; `čovek` (NFD) → `ц̌овек`. Now round-trips to `човек`.
+- **B2** — Roman-numeral filter tightened to the canonical shape plus
+  a `never_roman` blacklist in `rules.yaml` for the Serbian/Montenegrin
+  particles (`MI`, `LI`, `VI`, `CI`) that happen to be valid Roman
+  numerals. Fixes `DA LI voliš?` → `ДА ЛИ волиш?` (was `ДА LI ВОЛИШ?`)
+  and every all-caps card using those pronouns. `CIVIL`, `MILD`, and
+  similar non-canonical shapes stopped getting mistakenly skipped.
+- **B3** — Pre-stash pass protects URLs, emails, hashtags, and
+  @-mentions before word-splitting. `#Beograd`, `https://beograd.rs`,
+  `info@beograd.rs` used to be transliterated character-by-character.
+- **M1** — MIXED-case words longer than 2 characters (`iPhone`, `iOS`,
+  `mRNA`, `YouTube`) are left untouched. The old lowercased conversion
+  produced `ипхоне` etc. The 2-char irregular digraph edge cases
+  (`lJ`, `nJ`, `dŽ`) still convert as before.
+- **M2** — Words starting with a digit (`2brzo`, `100dinara`) now
+  transliterate their letter part instead of being skipped whole.
+- **M6** — YAML test fixtures keyed by portable `source`/`target`
+  script codes instead of Python-only `lang`/`direction`. Swift and
+  Kotlin ports will read the same YAML with their own resolvers.
+
+### Documented
+- **M5** — Legacy typewriter `dj` for `đ` is NOT auto-mapped
+  (ambiguity with native compounds like `odjek`, `podjednako`).
+  Behaviour pinned by tests.
+
 ## 0.2.0
 
 ### Changed — API
