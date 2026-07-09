@@ -51,7 +51,18 @@ def _apply_case(text: str, pattern: _CasePattern) -> str:
     return text
 
 
-_ROMAN_RE = re.compile(r"^[IVXLCDM]{2,}$")
+# Canonical Roman numeral form: M{0,3} (CM|CD|D?C{0,3}) (XC|XL|L?X{0,3}) (IX|IV|V?I{0,3}).
+# The naive `[IVXLCDM]{2,}` fired on common Serbian all-caps words made of
+# only those letters — `MI` (мы), `LI` (ли), `VI` (ви), `CI` (ти-dat),
+# `CIVIL`, `MILD`, `DA LI` — corrupting them into untouched Latin.
+# The ≥2 guard drops single-letter numerals (`I`, `V`, `X`) so they still
+# transliterate as words; anything ≥2 letters must match the canonical
+# shape to survive.
+_ROMAN_RE = re.compile(r"^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$")
+
+
+def _is_roman(word: str) -> bool:
+    return len(word) >= 2 and bool(_ROMAN_RE.match(word))
 # Quotes are paired asymmetrically: an opener maps to a specific closer.
 # A symmetric character class would happily match `»backwards«` or
 # `„open ASCII"` with a Serbian-low opener that owns nothing — corrupting
@@ -77,12 +88,13 @@ class _Rule:
         self.singles: dict[str, str] = data.get("singles", {}) or {}
         self.extras_in_word: str = data.get("extras_in_word", "") or ""
         self.non_native_letters: set[str] = set(data.get("non_native_letters", "") or "")
+        self.never_roman: set[str] = {w.upper() for w in data.get("never_roman", []) or []}
         self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(self.extras_in_word)}]+)")
 
     def _convert_word(self, word: str) -> str:
         if self.non_native_letters and self.non_native_letters.intersection(word):
             return word
-        if _ROMAN_RE.match(word):
+        if _is_roman(word) and word.upper() not in self.never_roman:
             return word
 
         # pre_char runs on the original casing (Ð/Đ pair, ð/đ pair). Handled

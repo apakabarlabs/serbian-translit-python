@@ -145,6 +145,33 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
+  - section: "Serbian Latin → Cyrillic — Roman false-positives (B2)"
+    lang: srp
+    direction: to_cyr
+    cases:
+      # `MI` is the pronoun "we" (мы), not the numeral 1001.
+      - text: "MI smo"
+        want: "МИ смо"
+      # `LI` is the interrogative particle (ли).
+      - text: "DA LI voliš?"
+        want: "ДА ЛИ волиш?"
+      # `VI` is "you (pl.)" (ви).
+      - text: "VI ste"
+        want: "ВИ сте"
+      # `CI` is the dative of "ти".
+      - text: "CI je rekao"
+        want: "ЦИ је рекао"
+      # Common Serbian words made of Roman-numeral letters:
+      - text: "CIVIL"
+        want: "ЦИВИЛ"
+      - text: "MILD dan"
+        want: "МИЛД дан"
+      # Genuine Roman numerals must still stay Latin.
+      - text: "II vek"
+        want: "II век"
+      - text: "MCMLXXXIV"
+        want: "MCMLXXXIV"
+
   - section: "Serbian Latin → Cyrillic — Đ variants (U+0110 / U+00D0)"
     lang: srp
     direction: to_cyr

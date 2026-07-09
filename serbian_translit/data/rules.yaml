@@ -57,6 +57,9 @@ rules:
       "ž": ж
     extras_in_word: "čČćĆđĐšŠžŽ"
     non_native_letters: "wxyqWXYQ"
+    # Words that look like Roman numerals but are Serbian
+    # pronouns/particles — compared case-insensitively.
+    never_roman: ["MI", "LI", "VI", "CI"]
 
   - source: srp-cyrl
     target: srp-latn
@@ -136,6 +139,9 @@ rules:
       "ž": ж
     extras_in_word: "čČćĆđĐšŠžŽśŚźŹ"
     non_native_letters: "wxyqWXYQ"
+    # Words that look like Roman numerals but are Montenegrin
+    # pronouns/particles — compared case-insensitively.
+    never_roman: ["MI", "LI", "VI", "CI"]
 
   - source: cnr-cyrl
     target: cnr-latn
