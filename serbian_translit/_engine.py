@@ -17,6 +17,7 @@ Word-level protection during a conversion:
 from __future__ import annotations
 
 import re
+import unicodedata
 from enum import Enum
 from pathlib import Path
 
@@ -122,6 +123,13 @@ class _Rule:
     def apply(self, text: str) -> str:
         if not text:
             return ""
+
+        # Normalise to NFC. macOS clipboard, iOS filenames, and many web
+        # sources hand out NFD; without this, `č` (c + U+030C) would split
+        # into `c` → `ц` and a leaking combining mark. NB: Montenegrin
+        # `с́`/`з́` are already-decomposed forms with no NFC equivalent —
+        # they survive normalisation and are handled as digraphs downstream.
+        text = unicodedata.normalize("NFC", text)
 
         slots: dict[str, str] = {}
         counter = 0

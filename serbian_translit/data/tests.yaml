@@ -171,6 +171,29 @@ tests:
       - text: 'bend „AC/DC"'
         want: 'бенд „AC/DC"'
 
+  - section: "Serbian Latin → Cyrillic — NFD input normalises to NFC first (B1)"
+    lang: srp
+    direction: to_cyr
+    cases:
+      # macOS clipboard, iOS filenames and many web sources hand out NFD.
+      # `č`/`ć`/`š`/`ž`/`đ` decompose to base ASCII + combining mark.
+      # NFD `čovek` = c + U+030C + o + v + e + k
+      - text: "c\u030Covek"
+        want: "човек"
+      # NFD `Ćao` = C + U+0301 + a + o
+      - text: "C\u0301ao"
+        want: "Ћао"
+      # NFD `žena` = z + U+030C + e + n + a
+      - text: "z\u030Cena"
+        want: "жена"
+      # NFD `šta` = s + U+030C + t + a
+      - text: "s\u030Cta"
+        want: "шта"
+      # NB: Đ/đ do NOT canonically decompose in Unicode — pinned to confirm
+      # precomposed still round-trips alongside the NFD path.
+      - text: "đak"
+        want: "ђак"
+
   - section: "Serbian Latin → Cyrillic — quote-region edge cases (regression)"
     lang: srp
     direction: to_cyr
