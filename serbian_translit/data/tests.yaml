@@ -145,6 +145,26 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
+  - section: "Serbian Latin → Cyrillic — `dj` typewriter digraph NOT mapped to `đ` (M5)"
+    lang: srp
+    direction: to_cyr
+    cases:
+      # Policy: legacy typewriter-era `dj` for `đ` is NOT auto-mapped.
+      # Ambiguity: `dj` also appears as two independent letters in
+      # native compounds (`odjek`, `podjednako`, `nadjednom`) where
+      # mapping to `ђ` would be wrong. Authors must use the correct
+      # `đ` in modern text; if a corpus needs legacy support it can
+      # be normalised upstream.
+      - text: "djak"
+        want: "дјак"
+      - text: "medjunarodni"
+        want: "медјународни"
+      - text: "Djukanović"
+        want: "Дјукановић"
+      # Confirming the correct form still works alongside the policy.
+      - text: "đak"
+        want: "ђак"
+
   - section: "Serbian Latin → Cyrillic — digit-first words still transliterate (M2)"
     lang: srp
     direction: to_cyr
