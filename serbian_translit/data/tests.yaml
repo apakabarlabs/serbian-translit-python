@@ -145,6 +145,27 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
+  - section: "Serbian Latin → Cyrillic — URLs/emails/handles preserved (B3)"
+    lang: srp
+    direction: to_cyr
+    cases:
+      # URLs — nothing inside a URL should transliterate.
+      - text: "poseti https://beograd.rs sada"
+        want: "посети https://beograd.rs сада"
+      - text: "www.beograd.rs je tu"
+        want: "www.beograd.rs је ту"
+      - text: "http://kod.hr link"
+        want: "http://kod.hr линк"
+      # Email addresses — user@host untouched, surrounding text converts.
+      - text: "info@beograd.rs sada"
+        want: "info@beograd.rs сада"
+      # Hashtags — leading #, rest untouched.
+      - text: "vidi #Beograd i #NoviSad ovde"
+        want: "види #Beograd и #NoviSad овде"
+      # Mentions — leading @, rest untouched.
+      - text: "prati @novisad danas"
+        want: "прати @novisad данас"
+
   - section: "Serbian Latin → Cyrillic — Roman false-positives (B2)"
     lang: srp
     direction: to_cyr

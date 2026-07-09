@@ -76,6 +76,23 @@ _QUOTED_RE = re.compile(
     re.DOTALL,
 )
 
+# URLs, email addresses, hashtags and @-mentions must round-trip verbatim.
+# Order matters — URL alt runs first (its `://` distinguishes from bare
+# domains); `www.` shorthand catches schemeless URLs; then email, hashtag,
+# handle. The stop set (whitespace, control, common punctuation) is a
+# conservative envelope: real-world URLs may contain more (parens, semis),
+# but they are also the characters that terminate a URL in prose. If a
+# real URL contains those, wrap it in angle brackets and it will still be
+# protected as a foreign token by the enclosing whitespace boundary.
+_TOKEN_STOP = r"\s<>"
+_TOKEN_RE = re.compile(
+    rf"[a-zA-Z][a-zA-Z0-9+.\-]*://[^{_TOKEN_STOP}]+"  # scheme://rest
+    rf"|www\.[^{_TOKEN_STOP}]+"  # www.rest
+    rf"|[^{_TOKEN_STOP}@]+@[^{_TOKEN_STOP}@]+\.[^{_TOKEN_STOP}@]+"  # user@host.tld
+    rf"|#[^{_TOKEN_STOP}#@]+"  # #hashtag
+    rf"|@[^{_TOKEN_STOP}#@]+",  # @mention
+)
+
 
 class _Rule:
     """One source→target mapping loaded from rules.yaml."""
@@ -153,7 +170,11 @@ class _Rule:
             counter += 1
             return key
 
-        protected = _QUOTED_RE.sub(_stash, text)
+        # Order: URLs/emails/handles first (may sit inside quoted regions —
+        # rare but possible; either way we stash them so their characters
+        # never see the tokeniser), then quoted regions.
+        protected = _TOKEN_RE.sub(_stash, text)
+        protected = _QUOTED_RE.sub(_stash, protected)
 
         parts = self.word_split_re.split(protected)
         rendered: list[str] = []
