@@ -125,6 +125,14 @@ class _Rule:
         # Convert to lowercase, do the mapping, apply the word-level pattern
         # to the joined output at the end.
         case = _detect_case(word)
+        # MIXED case in a longer word means a brand name / acronym
+        # (`iPhone`, `iOS`, `mRNA`) whose casing carries meaning we cannot
+        # preserve after a lowercased conversion — leave it untouched.
+        # 2-char MIXED words are the irregular digraph edge cases
+        # (`lJ`, `nJ`, `dŽ`) that the flowbot original converted; keep
+        # that behaviour.
+        if case == _CasePattern.MIXED and len(word) > 2:
+            return word
         lower_word = word.lower()
 
         result: list[str] = []

@@ -145,6 +145,24 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
+  - section: "Serbian Latin → Cyrillic — MIXED-case brand names left untouched (M1)"
+    lang: srp
+    direction: to_cyr
+    cases:
+      # Real brand and biology terms — a MIXED-case word cannot be
+      # confidently mapped to a single script and gets left as-is.
+      - text: "kupio je iPhone"
+        want: "купио је iPhone"
+      - text: "novi YouTube kanal"
+        want: "нови YouTube канал"
+      - text: "iOS uređaj"
+        want: "iOS уређај"
+      - text: "mRNA vakcina"
+        want: "mRNA вакцина"
+      # The mixed-case irregular digraphs from the existing test are NOT
+      # brand names — the entire word is a Serbian phrase written weirdly.
+      # Those remain in their own section (edge_cases).
+
   - section: "Serbian Latin → Cyrillic — URLs/emails/handles preserved (B3)"
     lang: srp
     direction: to_cyr
