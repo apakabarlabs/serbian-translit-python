@@ -1,0 +1,423 @@
+# Test cases shared across every port (Python / Swift / Kotlin).
+# Each section pins a source→target direction; the same YAML drives the
+# pytest parametrize in every language.
+
+tests:
+
+  - section: "Serbian Latin → Cyrillic — mixed-case digraphs (irregular)"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "lJ"
+        want: "љ"
+      - text: "nJ"
+        want: "њ"
+      - text: "dŽ"
+        want: "џ"
+
+  - section: "Serbian Latin → Cyrillic — common words"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Srbija"
+        want: "Србија"
+      - text: "SRBIJA"
+        want: "СРБИЈА"
+      - text: "Beograd"
+        want: "Београд"
+      - text: "BEOGRAD"
+        want: "БЕОГРАД"
+      - text: "Novi Sad"
+        want: "Нови Сад"
+      - text: "NOVI SAD"
+        want: "НОВИ САД"
+
+  - section: "Serbian Latin → Cyrillic — digraph words"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "ljubav"
+        want: "љубав"
+      - text: "Ljubav"
+        want: "Љубав"
+      - text: "LJUBAV"
+        want: "ЉУБАВ"
+      - text: "konj"
+        want: "коњ"
+      - text: "Konj"
+        want: "Коњ"
+      - text: "KONJ"
+        want: "КОЊ"
+      - text: "džep"
+        want: "џеп"
+      - text: "Džep"
+        want: "Џеп"
+      - text: "DŽEP"
+        want: "ЏЕП"
+
+  - section: "Serbian Latin → Cyrillic — diacritics"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "čovek"
+        want: "човек"
+      - text: "Čovek"
+        want: "Човек"
+      - text: "ČOVEK"
+        want: "ЧОВЕК"
+      - text: "ćao"
+        want: "ћао"
+      - text: "Ćao"
+        want: "Ћао"
+      - text: "ĆAO"
+        want: "ЋАО"
+      - text: "đak"
+        want: "ђак"
+      - text: "Đak"
+        want: "Ђак"
+      - text: "ĐAK"
+        want: "ЂАК"
+      - text: "što"
+        want: "што"
+      - text: "Što"
+        want: "Што"
+      - text: "ŠTO"
+        want: "ШТО"
+      - text: "žena"
+        want: "жена"
+      - text: "Žena"
+        want: "Жена"
+      - text: "ŽENA"
+        want: "ЖЕНА"
+
+  - section: "Serbian Latin → Cyrillic — sentences"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Dobar dan"
+        want: "Добар дан"
+      - text: "DOBAR DAN"
+        want: "ДОБАР ДАН"
+      - text: "Kako si?"
+        want: "Како си?"
+      - text: "Hvala lepo"
+        want: "Хвала лепо"
+      - text: "Vidimo se kasnije"
+        want: "Видимо се касније"
+
+  - section: "Serbian Latin → Cyrillic — consecutive digraphs"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Njujork"
+        want: "Њујорк"
+      - text: "NJUJORK"
+        want: "ЊУЈОРК"
+
+  - section: "Serbian Latin → Cyrillic — numbers and punctuation"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Beograd 2024"
+        want: "Београд 2024"
+      - text: "Zdravo, kako si?"
+        want: "Здраво, како си?"
+
+  - section: "Serbian Latin → Cyrillic — mixed Serbian and non-Serbian"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Srbija i Serbia"
+        want: "Србија и Сербиа"
+      - text: "café u Beogradu"
+        want: "цафé у Београду"
+
+  - section: "Serbian Latin → Cyrillic — Roman numerals stay Latin"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Nikolaj II"
+        want: "Николај II"
+      - text: "Aleksandar III"
+        want: "Александар III"
+      - text: "Luj XIV"
+        want: "Луј XIV"
+      - text: "XX vek"
+        want: "XX век"
+
+  - section: "Serbian Latin → Cyrillic — Đ variants (U+0110 / U+00D0)"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Đuzepe"
+        want: "Ђузепе"
+      - text: "đuzepe"
+        want: "ђузепе"
+      - text: "Ðuzepe"
+        want: "Ђузепе"
+      - text: "ðuzepe"
+        want: "ђузепе"
+
+  - section: "Serbian Latin → Cyrillic — quoted text preserved"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: 'grupe „Highway to Hell"'
+        want: 'групе „Highway to Hell"'
+      - text: 'izložba "Any-medium-whatever"'
+        want: 'изложба "Any-medium-whatever"'
+      - text: "pesma „Bella Ciao“"
+        want: "песма „Bella Ciao“"
+      - text: 'bend „AC/DC"'
+        want: 'бенд „AC/DC"'
+
+  - section: "Serbian Latin → Cyrillic — quote-region edge cases (regression)"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      # Flipped French quotes must NOT be treated as a paired region — the
+      # symmetric-character-class version of QUOTED_RE would eat this.
+      - text: "»reci« ok"
+        want: "»реци« ок"
+      # Adjacent ASCII quotes with Serbian-low opener in between must not
+      # collapse into one mis-paired span; each pair is independent.
+      - text: 'reci "a" i „b"'
+        want: 'реци "a" и „b"'
+      # Two independent ASCII pairs on one line.
+      - text: 'kaži "one" i "two" reci'
+        want: 'кажи "one" и "two" реци'
+      # Unclosed quote → nothing protected, plain conversion of the rest.
+      - text: 'nema kraja "otvoreno reci'
+        want: 'нема краја "отворено реци'
+
+  - section: "Serbian Latin → Cyrillic — foreign words (w/x/y/q) skipped"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "New York"
+        want: "New York"
+      - text: "WiFi signal"
+        want: "WiFi сигнал"
+
+  - section: "Serbian Latin → Cyrillic — no Latin leak"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      - text: "Batumski arheološki muzej"
+        want: "Батумски археолошки музеј"
+      - text: "Sarčimelidze"
+        want: "Сарчимелидзе"
+
+  - section: "Serbian Cyrillic → Latin — common words (reverse)"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "Србија"
+        want: "Srbija"
+      - text: "СРБИЈА"
+        want: "SRBIJA"
+      - text: "Београд"
+        want: "Beograd"
+      - text: "БЕОГРАД"
+        want: "BEOGRAD"
+      - text: "Нови Сад"
+        want: "Novi Sad"
+      - text: "НОВИ САД"
+        want: "NOVI SAD"
+
+  - section: "Serbian Cyrillic → Latin — digraph words (reverse)"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "љубав"
+        want: "ljubav"
+      - text: "Љубав"
+        want: "Ljubav"
+      - text: "ЉУБАВ"
+        want: "LJUBAV"
+      - text: "коњ"
+        want: "konj"
+      - text: "Коњ"
+        want: "Konj"
+      - text: "КОЊ"
+        want: "KONJ"
+      - text: "џеп"
+        want: "džep"
+      - text: "Џеп"
+        want: "Džep"
+      - text: "ЏЕП"
+        want: "DŽEP"
+
+  - section: "Serbian Cyrillic → Latin — diacritics (reverse)"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "човек"
+        want: "čovek"
+      - text: "Човек"
+        want: "Čovek"
+      - text: "ЧОВЕК"
+        want: "ČOVEK"
+      - text: "ћао"
+        want: "ćao"
+      - text: "Ћао"
+        want: "Ćao"
+      - text: "ЋАО"
+        want: "ĆAO"
+      - text: "ђак"
+        want: "đak"
+      - text: "Ђак"
+        want: "Đak"
+      - text: "ЂАК"
+        want: "ĐAK"
+      - text: "што"
+        want: "što"
+      - text: "Што"
+        want: "Što"
+      - text: "ШТО"
+        want: "ŠTO"
+      - text: "жена"
+        want: "žena"
+      - text: "Жена"
+        want: "Žena"
+      - text: "ЖЕНА"
+        want: "ŽENA"
+
+  - section: "Serbian Cyrillic → Latin — sentences (reverse)"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "Добар дан"
+        want: "Dobar dan"
+      - text: "ДОБАР ДАН"
+        want: "DOBAR DAN"
+      - text: "Како си?"
+        want: "Kako si?"
+      - text: "Хвала лепо"
+        want: "Hvala lepo"
+      - text: "Видимо се касније"
+        want: "Vidimo se kasnije"
+
+  - section: "Serbian Cyrillic → Latin — consecutive digraphs (reverse)"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "Њујорк"
+        want: "Njujork"
+      - text: "ЊУЈОРК"
+        want: "NJUJORK"
+
+  - section: "Serbian Cyrillic → Latin — numbers and punctuation (reverse)"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "Београд 2024"
+        want: "Beograd 2024"
+      - text: "Здраво, како си?"
+        want: "Zdravo, kako si?"
+
+  - section: "Serbian Cyrillic → Latin — Roman numerals stay Latin"
+    source: srp-cyrl
+    target: srp-latn
+    cases:
+      - text: "Николај II"
+        want: "Nikolaj II"
+      - text: "Александар III"
+        want: "Aleksandar III"
+      - text: "Луј XIV"
+        want: "Luj XIV"
+      - text: "XX век"
+        want: "XX vek"
+
+  - section: "Montenegrin Latin → Cyrillic — Ś/ź letters"
+    source: cnr-latn
+    target: cnr-cyrl
+    cases:
+      - text: "śever"
+        want: "с́евер"
+      - text: "Śever"
+        want: "С́евер"
+      - text: "ŚEVER"
+        want: "С́ЕВЕР"
+      - text: "iźesti"
+        want: "из́ести"
+      - text: "Źenica"
+        want: "З́еница"
+      - text: "ŹENICA"
+        want: "З́ЕНИЦА"
+
+  - section: "Montenegrin Latin → Cyrillic — whole word gets transliterated"
+    source: cnr-latn
+    target: cnr-cyrl
+    cases:
+      - text: "śutra śeverno"
+        want: "с́утра с́еверно"
+
+  - section: "Montenegrin Latin → Cyrillic — shared BCMS behaviour"
+    source: cnr-latn
+    target: cnr-cyrl
+    cases:
+      - text: "Dobar dan"
+        want: "Добар дан"
+      - text: "Njujork"
+        want: "Њујорк"
+      - text: "ljubav"
+        want: "љубав"
+      - text: "čovjek"
+        want: "човјек"
+
+  - section: "Montenegrin Latin → Cyrillic — foreign words skipped"
+    source: cnr-latn
+    target: cnr-cyrl
+    cases:
+      - text: "New York"
+        want: "New York"
+
+  - section: "Montenegrin Latin → Cyrillic — Roman numerals stay Latin"
+    source: cnr-latn
+    target: cnr-cyrl
+    cases:
+      - text: "Petar II śedi"
+        want: "Петар II с́еди"
+
+  - section: "Montenegrin Cyrillic → Latin — Ś/ź letters (reverse)"
+    source: cnr-cyrl
+    target: cnr-latn
+    cases:
+      - text: "с́евер"
+        want: "śever"
+      - text: "С́евер"
+        want: "Śever"
+      - text: "С́ЕВЕР"
+        want: "ŚEVER"
+      - text: "из́ести"
+        want: "iźesti"
+      - text: "З́еница"
+        want: "Źenica"
+      - text: "З́ЕНИЦА"
+        want: "ŹENICA"
+
+  - section: "Montenegrin Cyrillic → Latin — whole word (reverse)"
+    source: cnr-cyrl
+    target: cnr-latn
+    cases:
+      - text: "с́утра с́еверно"
+        want: "śutra śeverno"
+
+  - section: "Montenegrin Cyrillic → Latin — shared BCMS behaviour (reverse)"
+    source: cnr-cyrl
+    target: cnr-latn
+    cases:
+      - text: "Добар дан"
+        want: "Dobar dan"
+      - text: "Њујорк"
+        want: "Njujork"
+      - text: "љубав"
+        want: "ljubav"
+
+  - section: "Montenegrin Cyrillic → Latin — Roman numerals (reverse)"
+    source: cnr-cyrl
+    target: cnr-latn
+    cases:
+      - text: "Петар II с́еди"
+        want: "Petar II śedi"

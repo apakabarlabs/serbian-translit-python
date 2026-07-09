@@ -1,0 +1,179 @@
+# Serbian/Montenegrin script conversion rules.
+#
+# Each rule declares a source→target script and gives three ordered maps:
+#   digraphs — matched first, greedy (`lj`→`љ`, `dž`→`џ`); case-aware.
+#   pre_char — pre-processed single-character remaps applied before `singles`.
+#                Used for accepting alternate codepoints (Đ variants) that
+#                collapse to the same base letter.
+#   singles  — 1:1 base-letter map.
+# Case handling: the engine looks at the surrounding word to decide
+# LOWER / UPPER / TITLE, so `Nj` in "Njujork" but `NJ` in "NJUJORK".
+#
+# extras_in_word: letters (beyond base ASCII / Cyrillic ranges) that count
+# as part of a word for tokenisation. Without listing them, `š` or `ž` would
+# split a Latin word into pieces and case-detection would misfire.
+#
+# non_native_letters: if a word contains any of these letters, it is left
+# untouched (foreign inclusion). Applies to Latin source only.
+
+rules:
+
+  - source: srp-latn
+    target: srp-cyrl
+    digraphs:
+      lj: љ
+      nj: њ
+      dž: џ
+    pre_char:
+      "Ð": "Đ"   # Ð (Eth) → Đ (D-stroke): editors often type Eth by accident
+      "ð": "đ"   # ð (eth) → đ (d-stroke): same
+    singles:
+      a: а
+      b: б
+      c: ц
+      "č": ч
+      "ć": ћ
+      d: д
+      "đ": ђ
+      e: е
+      f: ф
+      g: г
+      h: х
+      i: и
+      j: ј
+      k: к
+      l: л
+      m: м
+      n: н
+      o: о
+      p: п
+      r: р
+      s: с
+      "š": ш
+      t: т
+      u: у
+      v: в
+      z: з
+      "ž": ж
+    extras_in_word: "čČćĆđĐšŠžŽ"
+    non_native_letters: "wxyqWXYQ"
+
+  - source: srp-cyrl
+    target: srp-latn
+    digraphs:
+      "љ": lj
+      "њ": nj
+      "џ": dž
+    singles:
+      "а": a
+      "б": b
+      "в": v
+      "г": g
+      "д": d
+      "ђ": "đ"
+      "е": e
+      "ж": "ž"
+      "з": z
+      "и": i
+      "ј": j
+      "к": k
+      "л": l
+      "м": m
+      "н": n
+      "о": o
+      "п": p
+      "р": r
+      "с": s
+      "т": t
+      "ћ": "ć"
+      "у": u
+      "ф": f
+      "х": h
+      "ц": c
+      "ч": "č"
+      "ш": "š"
+    extras_in_word: ""
+    non_native_letters: ""
+
+  - source: cnr-latn
+    target: cnr-cyrl
+    digraphs:
+      lj: љ
+      nj: њ
+      dž: џ
+    pre_char:
+      "Ð": "Đ"
+      "ð": "đ"
+    singles:
+      a: а
+      b: б
+      c: ц
+      "č": ч
+      "ć": ћ
+      d: д
+      "đ": ђ
+      e: е
+      f: ф
+      g: г
+      h: х
+      i: и
+      j: ј
+      k: к
+      l: л
+      m: м
+      n: н
+      o: о
+      p: п
+      r: р
+      s: с
+      "ś": "с́"
+      "š": ш
+      t: т
+      u: у
+      v: в
+      z: з
+      "ź": "з́"
+      "ž": ж
+    extras_in_word: "čČćĆđĐšŠžŽśŚźŹ"
+    non_native_letters: "wxyqWXYQ"
+
+  - source: cnr-cyrl
+    target: cnr-latn
+    digraphs:
+      "љ": lj
+      "њ": nj
+      "џ": dž
+      # с́ / з́ are two codepoints (base + U+0301). Handled as digraphs so the
+      # combining mark is consumed with its base letter and does not leak.
+      "с́": "ś"
+      "з́": "ź"
+    singles:
+      "а": a
+      "б": b
+      "в": v
+      "г": g
+      "д": d
+      "ђ": "đ"
+      "е": e
+      "ж": "ž"
+      "з": z
+      "и": i
+      "ј": j
+      "к": k
+      "л": l
+      "м": m
+      "н": n
+      "о": o
+      "п": p
+      "р": r
+      "с": s
+      "т": t
+      "ћ": "ć"
+      "у": u
+      "ф": f
+      "х": h
+      "ц": c
+      "ч": "č"
+      "ш": "š"
+    extras_in_word: "́"
+    non_native_letters: ""
