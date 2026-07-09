@@ -19,9 +19,28 @@ from __future__ import annotations
 import re
 import unicodedata
 from enum import Enum
+from functools import lru_cache
 from pathlib import Path
+from typing import TypedDict
 
 import yaml
+
+
+class _RuleData(TypedDict, total=False):
+    """Shape of one entry in `data/rules.yaml`."""
+
+    source: str
+    target: str
+    digraphs: dict[str, str]
+    pre_char: dict[str, str]
+    singles: dict[str, str]
+    extras_in_word: str
+    non_native_letters: str
+    never_roman: list[str]
+
+
+class _RulesFile(TypedDict):
+    rules: list[_RuleData]
 
 
 class _CasePattern(Enum):
@@ -63,6 +82,8 @@ _ROMAN_RE = re.compile(r"^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})
 
 def _is_roman(word: str) -> bool:
     return len(word) >= 2 and bool(_ROMAN_RE.match(word))
+
+
 # Quotes are paired asymmetrically: an opener maps to a specific closer.
 # A symmetric character class would happily match `»backwards«` or
 # `„open ASCII"` with a Serbian-low opener that owns nothing — corrupting
@@ -84,7 +105,7 @@ _QUOTED_RE = re.compile(
 # but they are also the characters that terminate a URL in prose. If a
 # real URL contains those, wrap it in angle brackets and it will still be
 # protected as a foreign token by the enclosing whitespace boundary.
-_TOKEN_STOP = r"\s<>"
+_TOKEN_STOP = r"\s<>"  # noqa: S105 — regex character class, not a password
 _TOKEN_RE = re.compile(
     rf"[a-zA-Z][a-zA-Z0-9+.\-]*://[^{_TOKEN_STOP}]+"  # scheme://rest
     rf"|www\.[^{_TOKEN_STOP}]+"  # www.rest
@@ -97,15 +118,15 @@ _TOKEN_RE = re.compile(
 class _Rule:
     """One source→target mapping loaded from rules.yaml."""
 
-    def __init__(self, data: dict):
+    def __init__(self, data: _RuleData) -> None:
         self.source: str = data["source"]
         self.target: str = data["target"]
         self.digraphs: dict[str, str] = {k.lower(): v for k, v in data.get("digraphs", {}).items()}
-        self.pre_char: dict[str, str] = data.get("pre_char", {}) or {}
-        self.singles: dict[str, str] = data.get("singles", {}) or {}
-        self.extras_in_word: str = data.get("extras_in_word", "") or ""
-        self.non_native_letters: set[str] = set(data.get("non_native_letters", "") or "")
-        self.never_roman: set[str] = {w.upper() for w in data.get("never_roman", []) or []}
+        self.pre_char: dict[str, str] = data.get("pre_char") or {}
+        self.singles: dict[str, str] = data.get("singles") or {}
+        self.extras_in_word: str = data.get("extras_in_word") or ""
+        self.non_native_letters: set[str] = set(data.get("non_native_letters") or "")
+        self.never_roman: set[str] = {w.upper() for w in data.get("never_roman") or []}
         self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(self.extras_in_word)}]+)")
 
     def _convert_word(self, word: str) -> str:
@@ -171,7 +192,7 @@ class _Rule:
         slots: dict[str, str] = {}
         counter = 0
 
-        def _stash(match: re.Match) -> str:
+        def _stash(match: re.Match[str]) -> str:
             nonlocal counter
             key = f"\x00Q{counter}\x00"
             slots[key] = match.group(0)
@@ -203,18 +224,19 @@ class _Rule:
         return result
 
 
-_rules_cache: dict[tuple[str, str], _Rule] | None = None
+@lru_cache(maxsize=1)
+def _load_rules_table() -> dict[tuple[str, str], _Rule]:
+    """Load and index rules.yaml once. Cached for the process lifetime."""
+    path = Path(__file__).parent / "data" / "rules.yaml"
+    with path.open(encoding="utf-8") as f:
+        data: _RulesFile = yaml.safe_load(f)
+    return {(entry["source"], entry["target"]): _Rule(entry) for entry in data["rules"]}
 
 
 def _load_rule(source: str, target: str) -> _Rule:
-    """Return the compiled rule for a source→target pair. Cached after first load."""
-    global _rules_cache
-    if _rules_cache is None:
-        path = Path(__file__).parent / "data" / "rules.yaml"
-        with open(path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-        _rules_cache = {(entry["source"], entry["target"]): _Rule(entry) for entry in data["rules"]}
+    """Return the compiled rule for a source→target pair."""
     try:
-        return _rules_cache[(source, target)]
+        return _load_rules_table()[(source, target)]
     except KeyError as exc:
-        raise ValueError(f"No rule for {source} → {target} in rules.yaml") from exc
+        msg = f"No rule for {source} → {target} in rules.yaml"
+        raise ValueError(msg) from exc

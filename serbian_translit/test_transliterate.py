@@ -17,21 +17,33 @@ _ROUTES = {
 }
 
 
-def load_test_cases():
+def load_test_cases() -> list[tuple[str, str, str, str, str]]:
     path = Path(__file__).parent / "data" / "tests.yaml"
-    with open(path, encoding="utf-8") as f:
+    with path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    cases = []
-    for section in data["tests"]:
-        source = section["source"]
-        target = section["target"]
-        for case in section["cases"]:
-            cases.append((section["section"], source, target, case["text"], case["want"]))
-    return cases
+    return [
+        (section["section"], section["source"], section["target"], case["text"], case["want"])
+        for section in data["tests"]
+        for case in section["cases"]
+    ]
 
 
-@pytest.mark.parametrize("section,source,target,text,want", load_test_cases())
-def test_transliterate(section, source, target, text, want):
+@pytest.mark.parametrize(("section", "source", "target", "text", "want"), load_test_cases())
+def test_transliterate(section: str, source: str, target: str, text: str, want: str) -> None:
     func = _ROUTES[(source, target)]
     result = func(text)
     assert result == want, f"[{section}] {source} → {target} ('{text}'): got '{result}', want '{want}'"
+
+
+def test_empty_input_returns_empty_string() -> None:
+    assert srp.to_cyr("") == ""
+    assert srp.to_lat("") == ""
+    assert cnr.to_cyr("") == ""
+    assert cnr.to_lat("") == ""
+
+
+def test_unknown_rule_pair_raises_value_error() -> None:
+    from serbian_translit._engine import _load_rule  # noqa: PLC0415
+
+    with pytest.raises(ValueError, match="No rule for"):
+        _load_rule("eng-latn", "srp-cyrl")
