@@ -8,10 +8,14 @@ Both official scripts of Serbian (and Montenegrin) map one-to-one at the letter 
 
 ## Installation
 
-The library is distributed as a git tag (not published to PyPI). Install from GitHub:
+The library is distributed as git tags (not published to PyPI). Install from GitHub:
 
 ```bash
-pip install git+https://github.com/apakabarlabs/serbian-translit-python.git@v0.4.0
+# latest release
+pip install git+https://github.com/apakabarlabs/serbian-translit-python.git
+
+# pin a specific version (see releases: https://github.com/apakabarlabs/serbian-translit-python/releases)
+pip install git+https://github.com/apakabarlabs/serbian-translit-python.git@vX.Y.Z
 ```
 
 ## Usage
