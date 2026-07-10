@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from serbian_translit import _rule, cnr, srp
+from serbian_translit import cnr, srp
 
 # Every port resolves (source, target) to its own call shape. Python's
 # is a two-level module.function lookup; Swift/Kotlin use their own.
@@ -41,13 +41,3 @@ def test_transliterate(section: str, source: str, target: str, text: str, want: 
 )
 def test_empty_input_returns_empty_string(func: Callable[[str], str]) -> None:
     assert func("") == ""
-
-
-@pytest.mark.parametrize(
-    "pair",
-    [("eng-latn", "srp-cyrl"), ("srp-latn", "cnr-cyrl"), ("bogus", "bogus")],
-    ids=["unknown-source", "cross-language", "gibberish"],
-)
-def test_unknown_rule_pair_raises_value_error(pair: tuple[str, str]) -> None:
-    with pytest.raises(ValueError, match="No rule for"):
-        _rule.load(*pair)

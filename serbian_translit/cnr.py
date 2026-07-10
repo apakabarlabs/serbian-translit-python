@@ -4,17 +4,14 @@ the language-only letters ``ś``/``ź`` and their Cyrillic decompositions.
 
 from __future__ import annotations
 
-from ._rule import load
-
-_LAT_TO_CYR = load("cnr-latn", "cnr-cyrl")
-_CYR_TO_LAT = load("cnr-cyrl", "cnr-latn")
+from ._rule import CNR_CYR_TO_LAT, CNR_LAT_TO_CYR
 
 
 def to_cyr(text: str) -> str:
     """Montenegrin Latin → Cyrillic."""
-    return _LAT_TO_CYR.apply(text)
+    return CNR_LAT_TO_CYR.apply(text)
 
 
 def to_lat(text: str) -> str:
     """Montenegrin Cyrillic → Latin."""
-    return _CYR_TO_LAT.apply(text)
+    return CNR_CYR_TO_LAT.apply(text)

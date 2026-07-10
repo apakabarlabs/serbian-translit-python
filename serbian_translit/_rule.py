@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from functools import lru_cache
 from pathlib import Path
 from typing import TypedDict
 
@@ -122,7 +121,6 @@ class Rule:
         return self.singles.get(ch, ch), 1
 
 
-@lru_cache(maxsize=1)
 def _rules_table() -> dict[tuple[str, str], Rule]:
     path = Path(__file__).parent / "data" / "rules.yaml"
     with path.open(encoding="utf-8") as f:
@@ -130,9 +128,9 @@ def _rules_table() -> dict[tuple[str, str], Rule]:
     return {(entry["source"], entry["target"]): Rule(entry) for entry in data["rules"]}
 
 
-def load(source: str, target: str) -> Rule:
-    try:
-        return _rules_table()[(source, target)]
-    except KeyError as exc:
-        msg = f"No rule for {source} → {target} in rules.yaml"
-        raise ValueError(msg) from exc
+_TABLE = _rules_table()
+
+SRP_LAT_TO_CYR = _TABLE["srp-latn", "srp-cyrl"]
+SRP_CYR_TO_LAT = _TABLE["srp-cyrl", "srp-latn"]
+CNR_LAT_TO_CYR = _TABLE["cnr-latn", "cnr-cyrl"]
+CNR_CYR_TO_LAT = _TABLE["cnr-cyrl", "cnr-latn"]
