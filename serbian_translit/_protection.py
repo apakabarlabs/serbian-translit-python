@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import re
 import uuid
-from collections.abc import Callable
 
 # Quotes pair asymmetrically (an opener owns one specific closer).
 # A symmetric character class would happily pair `»…«` or `„…„`.
@@ -63,8 +62,3 @@ class ProtectedRegions:
         self._slots[key] = match.group(0)
         self._counter += 1
         return key
-
-
-# Public alias for tests and the engine — keeps the callable form
-# available if we later swap the class for a plain closure.
-Stash = Callable[[str], str]
