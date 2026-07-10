@@ -1,15 +1,14 @@
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 import yaml
 
-from serbian_translit import cnr, srp
+from serbian_translit import _rule, cnr, srp
 
-# Portable YAML fixtures identify each section by (source, target). Every
-# port resolves the pair to its own call shape — Python's is a two-level
-# module.function lookup below; Swift/Kotlin ports will map the same
-# YAML through their own naming.
-_ROUTES = {
+# Every port resolves (source, target) to its own call shape. Python's
+# is a two-level module.function lookup; Swift/Kotlin use their own.
+_ROUTES: dict[tuple[str, str], Callable[[str], str]] = {
     ("srp-latn", "srp-cyrl"): srp.to_cyr,
     ("srp-cyrl", "srp-latn"): srp.to_lat,
     ("cnr-latn", "cnr-cyrl"): cnr.to_cyr,
@@ -43,7 +42,5 @@ def test_empty_input_returns_empty_string() -> None:
 
 
 def test_unknown_rule_pair_raises_value_error() -> None:
-    from serbian_translit._engine import _load_rule  # noqa: PLC0415
-
     with pytest.raises(ValueError, match="No rule for"):
-        _load_rule("eng-latn", "srp-cyrl")
+        _rule.load("eng-latn", "srp-cyrl")

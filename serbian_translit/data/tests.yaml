@@ -4,6 +4,21 @@
 
 tests:
 
+  - section: "Serbian Latin → Cyrillic — user text that mimics internal sentinel does not collide (N7)"
+    source: srp-latn
+    target: srp-cyrl
+    cases:
+      # OpenAI responses and other upstream sources occasionally leak
+      # NUL (`\0`) bytes into strings. If the internal quote-stash
+      # sentinel used a stable counter (`\x00Q0\x00`), a user payload
+      # containing that exact substring would swap places with a real
+      # quoted region during restore. A UUID-per-call prefix makes the
+      # collision unreachable regardless of input.
+      - text: "Nekaj \"brand\" i \0Q0\0 tekst"
+        want: "Некај \"brand\" и \0Q0\0 текст"
+      - text: "\0Q0\0 sam \0Q1\0"
+        want: "\0Q0\0 сам \0Q1\0"
+
   - section: "Serbian Latin → Cyrillic — mixed-case digraphs (irregular)"
     source: srp-latn
     target: srp-cyrl
