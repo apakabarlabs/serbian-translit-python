@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.4.1
+
+### Refactor
+
+- Engine split further: `LetterMap` (digraph/single lookup) and
+  `SkipPolicy` (foreign-inclusion and Roman-numeral checks) extracted
+  from `Rule`, each in its own module. `Rule.apply` is now a short
+  pipeline; the class no longer carries the raw lookup tables.
+- Table loader and the four pre-built rule instances moved into
+  `table.py`, so `rule.py` is only the `Rule` class and its input
+  shape.
+- Private module filenames lost their leading underscore
+  (`_case.py` → `case.py`, etc.). Privacy is expressed by not being
+  re-exported from `__init__.py`.
+
+### CI and packaging
+
+- CI steps delegate to `make` targets; the local `make lint` and CI
+  `ruff check` no longer disagree on which paths are linted.
+- `make wheel-smoke` carries the full assert set the CI job used to
+  duplicate inline.
+- `S101` (assert usage) tightened to `tests/**` via `per-file-ignores`
+  instead of a repo-wide off switch.
+- `PLR2004` (magic value) re-enabled; the widths that used to trip it
+  are now named constants (`_DIGRAPH_WIDTH`, `_SINGLE_WIDTH`,
+  `_MIN_NUMERAL_LEN`, `_MIXED_CASE_CUTOFF`).
+
+### Docs
+
+- README install snippet no longer pins `@v0.4.0`; points at the
+  releases page for a specific version and shows `@main` for the
+  moving default.
+- Test section titles no longer carry internal audit codes.
+- CHANGELOG entries rewritten in human language; historical mention
+  of the removed `_engine.py` file dropped.
+
 ## 0.4.0
 
 ### Packaging
