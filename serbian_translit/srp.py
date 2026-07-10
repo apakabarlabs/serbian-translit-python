@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .rule import SRP_CYR_TO_LAT, SRP_LAT_TO_CYR
+from .table import SRP_CYR_TO_LAT, SRP_LAT_TO_CYR
 
 
 def to_cyr(text: str) -> str:

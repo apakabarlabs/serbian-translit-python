@@ -4,7 +4,7 @@ the language-only letters ``ś``/``ź`` and their Cyrillic decompositions.
 
 from __future__ import annotations
 
-from .rule import CNR_CYR_TO_LAT, CNR_LAT_TO_CYR
+from .table import CNR_CYR_TO_LAT, CNR_LAT_TO_CYR
 
 
 def to_cyr(text: str) -> str:
