@@ -15,9 +15,10 @@ from typing import TypedDict
 
 import yaml
 
-from . import case, roman
+from . import case
 from .letters import LetterMap
 from .protection import ProtectedRegions
+from .skip import SkipPolicy
 
 _MIXED_CASE_CUTOFF = 2
 
@@ -43,9 +44,11 @@ class Rule:
             digraphs={k.lower(): v for k, v in data.get("digraphs", {}).items()},
             singles=data.get("singles") or {},
         )
+        self.skip = SkipPolicy(
+            non_native_letters=set(data.get("non_native_letters") or ""),
+            never_roman={w.upper() for w in data.get("never_roman") or []},
+        )
         self.pre_char: dict[str, str] = data.get("pre_char") or {}
-        self.non_native_letters: set[str] = set(data.get("non_native_letters") or "")
-        self.never_roman: set[str] = {w.upper() for w in data.get("never_roman") or []}
         extras = data.get("extras_in_word") or ""
         self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(extras)}]+)")
 
@@ -68,9 +71,7 @@ class Rule:
         return part
 
     def _convert_word(self, word: str) -> str:
-        if self._is_foreign_inclusion(word):
-            return word
-        if self._is_roman_numeral(word):
+        if self.skip.is_foreign(word) or self.skip.is_roman_numeral(word):
             return word
 
         # Ð/Đ and ð/đ collapse before we look at case, so the character
@@ -86,12 +87,6 @@ class Rule:
             return word
 
         return case.apply(self.letters.convert(word.lower()), pattern)
-
-    def _is_foreign_inclusion(self, word: str) -> bool:
-        return bool(self.non_native_letters and self.non_native_letters.intersection(word))
-
-    def _is_roman_numeral(self, word: str) -> bool:
-        return roman.is_numeral(word) and word.upper() not in self.never_roman
 
     def _normalise_pre_char(self, word: str) -> str:
         if not self.pre_char:
