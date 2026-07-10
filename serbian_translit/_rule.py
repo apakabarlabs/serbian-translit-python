@@ -35,8 +35,6 @@ class _RulesFile(TypedDict):
     rules: list[RuleData]
 
 
-# Two-char digraph first, single afterwards — order matters when a
-# candidate matches both.
 _LOOKUP_WIDTHS = (2, 1)
 
 
