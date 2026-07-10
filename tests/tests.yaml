@@ -4,7 +4,7 @@
 
 tests:
 
-  - section: "Serbian Latin → Cyrillic — user text that mimics internal sentinel does not collide (N7)"
+  - section: "Serbian Latin → Cyrillic: user text that mimics internal sentinel does not collide (N7)"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -19,7 +19,7 @@ tests:
       - text: "\0Q0\0 sam \0Q1\0"
         want: "\0Q0\0 сам \0Q1\0"
 
-  - section: "Serbian Latin → Cyrillic — mixed-case digraphs (irregular)"
+  - section: "Serbian Latin → Cyrillic: mixed-case digraphs (irregular)"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -30,7 +30,7 @@ tests:
       - text: "dŽ"
         want: "џ"
 
-  - section: "Serbian Latin → Cyrillic — common words"
+  - section: "Serbian Latin → Cyrillic: common words"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -47,7 +47,7 @@ tests:
       - text: "NOVI SAD"
         want: "НОВИ САД"
 
-  - section: "Serbian Latin → Cyrillic — digraph words"
+  - section: "Serbian Latin → Cyrillic: digraph words"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -70,11 +70,11 @@ tests:
       - text: "DŽEP"
         want: "ЏЕП"
 
-  - section: "Serbian Latin → Cyrillic — diacritics"
+  - section: "Serbian Latin → Cyrillic: diacritics"
     source: srp-latn
     target: srp-cyrl
     cases:
-      - text: "čovek"
+      - text: "c\u030Covek"
         want: "човек"
       - text: "Čovek"
         want: "Човек"
@@ -82,7 +82,7 @@ tests:
         want: "ЧОВЕК"
       - text: "ćao"
         want: "ћао"
-      - text: "Ćao"
+      - text: "C\u0301ao"
         want: "Ћао"
       - text: "ĆAO"
         want: "ЋАО"
@@ -98,14 +98,14 @@ tests:
         want: "Што"
       - text: "ŠTO"
         want: "ШТО"
-      - text: "žena"
+      - text: "z\u030Cena"
         want: "жена"
       - text: "Žena"
         want: "Жена"
       - text: "ŽENA"
         want: "ЖЕНА"
 
-  - section: "Serbian Latin → Cyrillic — sentences"
+  - section: "Serbian Latin → Cyrillic: sentences"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -120,7 +120,7 @@ tests:
       - text: "Vidimo se kasnije"
         want: "Видимо се касније"
 
-  - section: "Serbian Latin → Cyrillic — consecutive digraphs"
+  - section: "Serbian Latin → Cyrillic: consecutive digraphs"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -129,7 +129,7 @@ tests:
       - text: "NJUJORK"
         want: "ЊУЈОРК"
 
-  - section: "Serbian Latin → Cyrillic — numbers and punctuation"
+  - section: "Serbian Latin → Cyrillic: numbers and punctuation"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -138,7 +138,7 @@ tests:
       - text: "Zdravo, kako si?"
         want: "Здраво, како си?"
 
-  - section: "Serbian Latin → Cyrillic — mixed Serbian and non-Serbian"
+  - section: "Serbian Latin → Cyrillic: mixed Serbian and non-Serbian"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -147,7 +147,7 @@ tests:
       - text: "café u Beogradu"
         want: "цафé у Београду"
 
-  - section: "Serbian Latin → Cyrillic — Roman numerals stay Latin"
+  - section: "Serbian Latin → Cyrillic: Roman numerals stay Latin"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -160,7 +160,7 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
-  - section: "Serbian Latin → Cyrillic — `dj` typewriter digraph NOT mapped to `đ` (M5)"
+  - section: "Serbian Latin → Cyrillic: `dj` typewriter digraph NOT mapped to `đ` (M5)"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -180,12 +180,12 @@ tests:
       - text: "đak"
         want: "ђак"
 
-  - section: "Serbian Latin → Cyrillic — digit-first words still transliterate (M2)"
+  - section: "Serbian Latin → Cyrillic: digit-first words still transliterate (M2)"
     source: srp-latn
     target: srp-cyrl
     cases:
       # A word starting with a digit still contains transliteratable
-      # letters — do not skip it whole.
+      # letters; do not skip it whole.
       - text: "2brzo za nas"
         want: "2брзо за нас"
       - text: "100dinara"
@@ -193,11 +193,11 @@ tests:
       - text: "20god od"
         want: "20год од"
 
-  - section: "Serbian Latin → Cyrillic — MIXED-case brand names left untouched (M1)"
+  - section: "Serbian Latin → Cyrillic: MIXED-case brand names left untouched (M1)"
     source: srp-latn
     target: srp-cyrl
     cases:
-      # Real brand and biology terms — a MIXED-case word cannot be
+      # Real brand and biology terms; a MIXED-case word cannot be
       # confidently mapped to a single script and gets left as-is.
       - text: "kupio je iPhone"
         want: "купио је iPhone"
@@ -208,31 +208,31 @@ tests:
       - text: "mRNA vakcina"
         want: "mRNA вакцина"
       # The mixed-case irregular digraphs from the existing test are NOT
-      # brand names — the entire word is a Serbian phrase written weirdly.
+      # brand names; the entire word is a Serbian phrase written weirdly.
       # Those remain in their own section (edge_cases).
 
-  - section: "Serbian Latin → Cyrillic — URLs/emails/handles preserved (B3)"
+  - section: "Serbian Latin → Cyrillic: URLs/emails/handles preserved (B3)"
     source: srp-latn
     target: srp-cyrl
     cases:
-      # URLs — nothing inside a URL should transliterate.
+      # URLs: nothing inside a URL should transliterate.
       - text: "poseti https://beograd.rs sada"
         want: "посети https://beograd.rs сада"
       - text: "www.beograd.rs je tu"
         want: "www.beograd.rs је ту"
       - text: "http://kod.hr link"
         want: "http://kod.hr линк"
-      # Email addresses — user@host untouched, surrounding text converts.
+      # Email addresses: user@host untouched, surrounding text converts.
       - text: "info@beograd.rs sada"
         want: "info@beograd.rs сада"
-      # Hashtags — leading #, rest untouched.
+      # Hashtags: leading #, rest untouched.
       - text: "vidi #Beograd i #NoviSad ovde"
         want: "види #Beograd и #NoviSad овде"
-      # Mentions — leading @, rest untouched.
+      # Mentions: leading @, rest untouched.
       - text: "prati @novisad danas"
         want: "прати @novisad данас"
 
-  - section: "Serbian Latin → Cyrillic — Roman false-positives (B2)"
+  - section: "Serbian Latin → Cyrillic: Roman false-positives (B2)"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -259,7 +259,7 @@ tests:
       - text: "MCMLXXXIV"
         want: "MCMLXXXIV"
 
-  - section: "Serbian Latin → Cyrillic — Đ variants (U+0110 / U+00D0)"
+  - section: "Serbian Latin → Cyrillic: Đ variants (U+0110 / U+00D0)"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -272,7 +272,7 @@ tests:
       - text: "ðuzepe"
         want: "ђузепе"
 
-  - section: "Serbian Latin → Cyrillic — quoted text preserved"
+  - section: "Serbian Latin → Cyrillic: quoted text preserved"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -285,34 +285,34 @@ tests:
       - text: 'bend „AC/DC"'
         want: 'бенд „AC/DC"'
 
-  - section: "Serbian Latin → Cyrillic — NFD input normalises to NFC first (B1)"
+  - section: "Serbian Latin → Cyrillic: NFD input normalises to NFC first (B1)"
     source: srp-latn
     target: srp-cyrl
     cases:
       # macOS clipboard, iOS filenames and many web sources hand out NFD.
       # `č`/`ć`/`š`/`ž`/`đ` decompose to base ASCII + combining mark.
       # NFD `čovek` = c + U+030C + o + v + e + k
-      - text: "c\u030Covek"
+      - text: "čovek"
         want: "човек"
       # NFD `Ćao` = C + U+0301 + a + o
-      - text: "C\u0301ao"
+      - text: "Ćao"
         want: "Ћао"
       # NFD `žena` = z + U+030C + e + n + a
-      - text: "z\u030Cena"
+      - text: "žena"
         want: "жена"
       # NFD `šta` = s + U+030C + t + a
-      - text: "s\u030Cta"
+      - text: "šta"
         want: "шта"
-      # NB: Đ/đ do NOT canonically decompose in Unicode — pinned to confirm
+      # NB: Đ/đ do NOT canonically decompose in Unicode; pinned to confirm
       # precomposed still round-trips alongside the NFD path.
       - text: "đak"
         want: "ђак"
 
-  - section: "Serbian Latin → Cyrillic — quote-region edge cases (regression)"
+  - section: "Serbian Latin → Cyrillic: quote-region edge cases (regression)"
     source: srp-latn
     target: srp-cyrl
     cases:
-      # Flipped French quotes must NOT be treated as a paired region — the
+      # Flipped French quotes must NOT be treated as a paired region; the
       # symmetric-character-class version of QUOTED_RE would eat this.
       - text: "»reci« ok"
         want: "»реци« ок"
@@ -327,7 +327,7 @@ tests:
       - text: 'nema kraja "otvoreno reci'
         want: 'нема краја "отворено реци'
 
-  - section: "Serbian Latin → Cyrillic — foreign words (w/x/y/q) skipped"
+  - section: "Serbian Latin → Cyrillic: foreign words (w/x/y/q) skipped"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -336,7 +336,7 @@ tests:
       - text: "WiFi signal"
         want: "WiFi сигнал"
 
-  - section: "Serbian Latin → Cyrillic — no Latin leak"
+  - section: "Serbian Latin → Cyrillic: no Latin leak"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -345,7 +345,7 @@ tests:
       - text: "Sarčimelidze"
         want: "Сарчимелидзе"
 
-  - section: "Serbian Cyrillic → Latin — common words (reverse)"
+  - section: "Serbian Cyrillic → Latin: common words (reverse)"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -362,7 +362,7 @@ tests:
       - text: "НОВИ САД"
         want: "NOVI SAD"
 
-  - section: "Serbian Cyrillic → Latin — digraph words (reverse)"
+  - section: "Serbian Cyrillic → Latin: digraph words (reverse)"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -385,7 +385,7 @@ tests:
       - text: "ЏЕП"
         want: "DŽEP"
 
-  - section: "Serbian Cyrillic → Latin — diacritics (reverse)"
+  - section: "Serbian Cyrillic → Latin: diacritics (reverse)"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -420,7 +420,7 @@ tests:
       - text: "ЖЕНА"
         want: "ŽENA"
 
-  - section: "Serbian Cyrillic → Latin — sentences (reverse)"
+  - section: "Serbian Cyrillic → Latin: sentences (reverse)"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -435,7 +435,7 @@ tests:
       - text: "Видимо се касније"
         want: "Vidimo se kasnije"
 
-  - section: "Serbian Cyrillic → Latin — consecutive digraphs (reverse)"
+  - section: "Serbian Cyrillic → Latin: consecutive digraphs (reverse)"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -444,7 +444,7 @@ tests:
       - text: "ЊУЈОРК"
         want: "NJUJORK"
 
-  - section: "Serbian Cyrillic → Latin — numbers and punctuation (reverse)"
+  - section: "Serbian Cyrillic → Latin: numbers and punctuation (reverse)"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -453,7 +453,7 @@ tests:
       - text: "Здраво, како си?"
         want: "Zdravo, kako si?"
 
-  - section: "Serbian Cyrillic → Latin — Roman numerals stay Latin"
+  - section: "Serbian Cyrillic → Latin: Roman numerals stay Latin"
     source: srp-cyrl
     target: srp-latn
     cases:
@@ -466,7 +466,7 @@ tests:
       - text: "XX век"
         want: "XX vek"
 
-  - section: "Montenegrin Latin → Cyrillic — Ś/ź letters"
+  - section: "Montenegrin Latin → Cyrillic: Ś/ź letters"
     source: cnr-latn
     target: cnr-cyrl
     cases:
@@ -483,14 +483,14 @@ tests:
       - text: "ŹENICA"
         want: "З́ЕНИЦА"
 
-  - section: "Montenegrin Latin → Cyrillic — whole word gets transliterated"
+  - section: "Montenegrin Latin → Cyrillic: whole word gets transliterated"
     source: cnr-latn
     target: cnr-cyrl
     cases:
       - text: "śutra śeverno"
         want: "с́утра с́еверно"
 
-  - section: "Montenegrin Latin → Cyrillic — shared BCMS behaviour"
+  - section: "Montenegrin Latin → Cyrillic: shared BCMS behaviour"
     source: cnr-latn
     target: cnr-cyrl
     cases:
@@ -503,21 +503,21 @@ tests:
       - text: "čovjek"
         want: "човјек"
 
-  - section: "Montenegrin Latin → Cyrillic — foreign words skipped"
+  - section: "Montenegrin Latin → Cyrillic: foreign words skipped"
     source: cnr-latn
     target: cnr-cyrl
     cases:
       - text: "New York"
         want: "New York"
 
-  - section: "Montenegrin Latin → Cyrillic — Roman numerals stay Latin"
+  - section: "Montenegrin Latin → Cyrillic: Roman numerals stay Latin"
     source: cnr-latn
     target: cnr-cyrl
     cases:
       - text: "Petar II śedi"
         want: "Петар II с́еди"
 
-  - section: "Montenegrin Cyrillic → Latin — Ś/ź letters (reverse)"
+  - section: "Montenegrin Cyrillic → Latin: Ś/ź letters (reverse)"
     source: cnr-cyrl
     target: cnr-latn
     cases:
@@ -534,14 +534,14 @@ tests:
       - text: "З́ЕНИЦА"
         want: "ŹENICA"
 
-  - section: "Montenegrin Cyrillic → Latin — whole word (reverse)"
+  - section: "Montenegrin Cyrillic → Latin: whole word (reverse)"
     source: cnr-cyrl
     target: cnr-latn
     cases:
       - text: "с́утра с́еверно"
         want: "śutra śeverno"
 
-  - section: "Montenegrin Cyrillic → Latin — shared BCMS behaviour (reverse)"
+  - section: "Montenegrin Cyrillic → Latin: shared BCMS behaviour (reverse)"
     source: cnr-cyrl
     target: cnr-latn
     cases:
@@ -552,7 +552,7 @@ tests:
       - text: "љубав"
         want: "ljubav"
 
-  - section: "Montenegrin Cyrillic → Latin — Roman numerals (reverse)"
+  - section: "Montenegrin Cyrillic → Latin: Roman numerals (reverse)"
     source: cnr-cyrl
     target: cnr-latn
     cases:
