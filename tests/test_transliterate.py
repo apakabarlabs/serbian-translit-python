@@ -34,13 +34,20 @@ def test_transliterate(section: str, source: str, target: str, text: str, want: 
     assert result == want, f"[{section}] {source} → {target} ('{text}'): got '{result}', want '{want}'"
 
 
-def test_empty_input_returns_empty_string() -> None:
-    assert srp.to_cyr("") == ""
-    assert srp.to_lat("") == ""
-    assert cnr.to_cyr("") == ""
-    assert cnr.to_lat("") == ""
+@pytest.mark.parametrize(
+    "func",
+    [srp.to_cyr, srp.to_lat, cnr.to_cyr, cnr.to_lat],
+    ids=["srp.to_cyr", "srp.to_lat", "cnr.to_cyr", "cnr.to_lat"],
+)
+def test_empty_input_returns_empty_string(func: Callable[[str], str]) -> None:
+    assert func("") == ""
 
 
-def test_unknown_rule_pair_raises_value_error() -> None:
+@pytest.mark.parametrize(
+    "pair",
+    [("eng-latn", "srp-cyrl"), ("srp-latn", "cnr-cyrl"), ("bogus", "bogus")],
+    ids=["unknown-source", "cross-language", "gibberish"],
+)
+def test_unknown_rule_pair_raises_value_error(pair: tuple[str, str]) -> None:
     with pytest.raises(ValueError, match="No rule for"):
-        _rule.load("eng-latn", "srp-cyrl")
+        _rule.load(*pair)
