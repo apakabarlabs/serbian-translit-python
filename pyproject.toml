@@ -95,7 +95,6 @@ ignore = [
     "B008",    # function calls in argument defaults
     "COM812",  # trailing comma missing, conflicts with formatter
     "ISC001",  # implicit-string-concat, conflicts with formatter
-    "PLR2004", # magic value, noisy for width literals like `for width in (2, 1)`
     "TRY003",  # long messages inside exception class, fine here
     # This library exists to distinguish Cyrillic vs Latin lookalikes.
     # `с` vs `c` in a comment is the whole point; ruff's ambiguous-char

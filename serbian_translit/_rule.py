@@ -35,7 +35,9 @@ class _RulesFile(TypedDict):
     rules: list[RuleData]
 
 
-_LOOKUP_WIDTHS = (2, 1)
+_DIGRAPH_WIDTH = 2
+_SINGLE_WIDTH = 1
+_LOOKUP_WIDTHS = (_DIGRAPH_WIDTH, _SINGLE_WIDTH)
 
 
 class Rule:
@@ -83,7 +85,7 @@ class Rule:
         # cannot survive a lowercased conversion; the round-trip loses
         # its casing. Two-char MIXED (`lJ`, `nJ`) is the digraph edge
         # case we do want to convert.
-        if case is _case.CasePattern.MIXED and len(word) > 2:
+        if case is _case.CasePattern.MIXED and len(word) > _DIGRAPH_WIDTH:
             return word
 
         mapped = self._map_letters(word.lower())

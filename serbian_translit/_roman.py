@@ -9,7 +9,9 @@ import re
 # form is the whole point.
 _CANONICAL = re.compile(r"^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$")
 
+# A single letter (`I`, `V`, `X`) is a word in this context, not a numeral.
+_MIN_NUMERAL_LEN = 2
+
 
 def is_numeral(word: str) -> bool:
-    # A single letter (`I`, `V`, `X`) is a word in this context, not a numeral.
-    return len(word) >= 2 and bool(_CANONICAL.match(word))
+    return len(word) >= _MIN_NUMERAL_LEN and bool(_CANONICAL.match(word))
