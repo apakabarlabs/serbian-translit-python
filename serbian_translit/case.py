@@ -1,8 +1,4 @@
-"""Word-level case detection and reapplication.
-
-Whole-word case is the invariant used across the engine: after lowering
-the word for lookup, the same pattern is reapplied at the end.
-"""
+"""Word-level case detection and reapplication."""
 
 from __future__ import annotations
 

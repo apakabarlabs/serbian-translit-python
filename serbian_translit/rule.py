@@ -1,10 +1,4 @@
-"""One source→target script mapping, loaded from ``data/rules.yaml``.
-
-The engine is language-agnostic: everything script-specific (digraphs,
-pre-char remaps, extra word-characters, non-native letters,
-never_roman blacklist) lives in the YAML file. This module is the
-runtime shape of one such entry plus its ``apply()`` method.
-"""
+"""One source→target script mapping, loaded from ``data/rules.yaml``."""
 
 from __future__ import annotations
 
@@ -57,8 +51,6 @@ class Rule:
         return protection.restore(rendered)
 
     def _convert_part(self, part: str) -> str:
-        # Whitespace/punctuation runs and digit-only chunks pass through;
-        # everything with at least one letter goes to the word converter.
         if any(ch.isalpha() for ch in part):
             return self._convert_word(part)
         return part
@@ -72,10 +64,8 @@ class Rule:
         word = self._normalise_pre_char(word)
 
         pattern = case.detect(word)
-        # A brand or acronym in the middle of prose (`iPhone`, `mRNA`)
-        # cannot survive a lowercased conversion; the round-trip loses
-        # its casing. Two-char MIXED (`lJ`, `nJ`) is the digraph edge
-        # case we do want to convert.
+        # Brands/acronyms (`iPhone`, `mRNA`) lose their casing on lowercase
+        # round-trip. Two-char MIXED (`lJ`, `nJ`) is the digraph edge case.
         if pattern is case.CasePattern.MIXED and len(word) > _MIXED_CASE_CUTOFF:
             return word
 

@@ -1,6 +1,4 @@
-"""Montenegrin (`cnr`) script conversion: same engine as Serbian plus
-the language-only letters ``ś``/``ź`` and their Cyrillic decompositions.
-"""
+"""Montenegrin (`cnr`) script conversion, Cyrillic ↔ Latin."""
 
 from __future__ import annotations
 
