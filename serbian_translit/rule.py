@@ -15,8 +15,8 @@ from typing import TypedDict
 
 import yaml
 
-from . import _case, _roman
-from ._protection import ProtectedRegions
+from . import case, roman
+from .protection import ProtectedRegions
 
 
 class RuleData(TypedDict, total=False):
@@ -79,22 +79,22 @@ class Rule:
         # count of the word is stable for the case-pattern step.
         word = self._normalise_pre_char(word)
 
-        case = _case.detect(word)
+        pattern = case.detect(word)
         # A brand or acronym in the middle of prose (`iPhone`, `mRNA`)
         # cannot survive a lowercased conversion; the round-trip loses
         # its casing. Two-char MIXED (`lJ`, `nJ`) is the digraph edge
         # case we do want to convert.
-        if case is _case.CasePattern.MIXED and len(word) > _DIGRAPH_WIDTH:
+        if pattern is case.CasePattern.MIXED and len(word) > _DIGRAPH_WIDTH:
             return word
 
         mapped = self._map_letters(word.lower())
-        return _case.apply(mapped, case)
+        return case.apply(mapped, pattern)
 
     def _is_foreign_inclusion(self, word: str) -> bool:
         return bool(self.non_native_letters and self.non_native_letters.intersection(word))
 
     def _is_roman_numeral(self, word: str) -> bool:
-        return _roman.is_numeral(word) and word.upper() not in self.never_roman
+        return roman.is_numeral(word) and word.upper() not in self.never_roman
 
     def _normalise_pre_char(self, word: str) -> str:
         if not self.pre_char:
