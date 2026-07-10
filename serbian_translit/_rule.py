@@ -53,8 +53,6 @@ class Rule:
         self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(self.extras_in_word)}]+)")
 
     def apply(self, text: str) -> str:
-        if not text:
-            return ""
         # macOS clipboard hands out NFD; the base ASCII would leak through
         # the digraph lookup and drop its combining mark.
         text = unicodedata.normalize("NFC", text)
