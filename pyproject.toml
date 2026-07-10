@@ -91,13 +91,13 @@ select = [
     "S",    # flake8-bandit (security)
 ]
 ignore = [
-    "E501",    # line too long — handled by formatter
+    "E501",    # line too long, handled by formatter
     "B008",    # function calls in argument defaults
-    "COM812",  # trailing comma missing — conflicts with formatter
-    "ISC001",  # implicit-string-concat — conflicts with formatter
-    "PLR2004", # magic value — noisy for width literals like `for width in (2, 1)`
-    "TRY003",  # long messages inside exception class — fine here
-    "S101",    # use of assert — pytest tests are all assert
+    "COM812",  # trailing comma missing, conflicts with formatter
+    "ISC001",  # implicit-string-concat, conflicts with formatter
+    "PLR2004", # magic value, noisy for width literals like `for width in (2, 1)`
+    "TRY003",  # long messages inside exception class, fine here
+    "S101",    # use of assert, pytest tests are all assert
     # This library exists to distinguish Cyrillic vs Latin lookalikes.
     # `с` vs `c` in a comment is the whole point; ruff's ambiguous-char
     # warnings would fire on every meaningful docstring.

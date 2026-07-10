@@ -80,7 +80,7 @@ class Rule:
 
         case = _case.detect(word)
         # A brand or acronym in the middle of prose (`iPhone`, `mRNA`)
-        # cannot survive a lowercased conversion — the round-trip loses
+        # cannot survive a lowercased conversion; the round-trip loses
         # its casing. Two-char MIXED (`lJ`, `nJ`) is the digraph edge
         # case we do want to convert.
         if case is _case.CasePattern.MIXED and len(word) > 2:

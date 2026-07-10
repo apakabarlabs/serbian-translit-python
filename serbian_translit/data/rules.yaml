@@ -1,11 +1,11 @@
 # Serbian/Montenegrin script conversion rules.
 #
 # Each rule declares a source→target script and gives three ordered maps:
-#   digraphs — matched first, greedy (`lj`→`љ`, `dž`→`џ`); case-aware.
-#   pre_char — pre-processed single-character remaps applied before `singles`.
+#   digraphs: matched first, greedy (`lj`→`љ`, `dž`→`џ`); case-aware.
+#   pre_char: pre-processed single-character remaps applied before `singles`.
 #                Used for accepting alternate codepoints (Đ variants) that
 #                collapse to the same base letter.
-#   singles  — 1:1 base-letter map.
+#   singles:  1:1 base-letter map.
 # Case handling: the engine looks at the surrounding word to decide
 # LOWER / UPPER / TITLE, so `Nj` in "Njujork" but `NJ` in "NJUJORK".
 #
@@ -58,7 +58,7 @@ rules:
     extras_in_word: "čČćĆđĐšŠžŽ"
     non_native_letters: "wxyqWXYQ"
     # Words that look like Roman numerals but are Serbian
-    # pronouns/particles — compared case-insensitively.
+    # pronouns/particles, compared case-insensitively.
     never_roman: ["MI", "LI", "VI", "CI"]
 
   - source: srp-cyrl
@@ -140,7 +140,7 @@ rules:
     extras_in_word: "čČćĆđĐšŠžŽśŚźŹ"
     non_native_letters: "wxyqWXYQ"
     # Words that look like Roman numerals but are Montenegrin
-    # pronouns/particles — compared case-insensitively.
+    # pronouns/particles, compared case-insensitively.
     never_roman: ["MI", "LI", "VI", "CI"]
 
   - source: cnr-cyrl

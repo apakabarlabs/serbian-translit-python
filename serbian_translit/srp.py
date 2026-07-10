@@ -1,4 +1,4 @@
-"""Serbian (`srp`) script conversion — Cyrillic ↔ Latin."""
+"""Serbian (`srp`) script conversion, Cyrillic ↔ Latin."""
 
 from __future__ import annotations
 

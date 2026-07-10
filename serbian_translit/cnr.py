@@ -1,4 +1,4 @@
-"""Montenegrin (`cnr`) script conversion — same engine as Serbian plus
+"""Montenegrin (`cnr`) script conversion: same engine as Serbian plus
 the language-only letters ``ś``/``ź`` and their Cyrillic decompositions.
 """
 
