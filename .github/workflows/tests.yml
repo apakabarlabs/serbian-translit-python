@@ -14,12 +14,10 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - name: Install ruff + mypy + test deps
+      - name: Install package with dev extras
         run: |
           python -m pip install --upgrade pip
-          # pytest is here so mypy can see its symbols in test files —
-          # strict mode chokes on unstubbed pytest.mark.parametrize otherwise.
-          pip install -e . ruff mypy types-PyYAML pytest
+          pip install -e ".[dev]"
       - name: Ruff check
         run: ruff check serbian_translit
       - name: Ruff format check
@@ -44,10 +42,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install package + test deps
+    - name: Install package with dev extras
       run: |
         python -m pip install --upgrade pip
-        pip install -e . pytest pytest-cov
+        pip install -e ".[dev]"
 
     - name: Run tests with coverage
       run: pytest --cov --cov-report=term-missing

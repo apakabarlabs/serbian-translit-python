@@ -1,6 +1,6 @@
 install:
 	python3 -m venv venv
-	venv/bin/pip install -e ".[dev]" pytest pytest-cov ruff mypy types-PyYAML build
+	venv/bin/pip install -e ".[dev]"
 
 test:
 	venv/bin/pytest --cov
