@@ -4,7 +4,7 @@
 
 tests:
 
-  - section: "Serbian Latin → Cyrillic: user text that mimics internal sentinel does not collide (N7)"
+  - section: "Serbian Latin → Cyrillic: user text that mimics internal sentinel does not collide"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -160,7 +160,7 @@ tests:
       - text: "XX vek"
         want: "XX век"
 
-  - section: "Serbian Latin → Cyrillic: `dj` typewriter digraph NOT mapped to `đ` (M5)"
+  - section: "Serbian Latin → Cyrillic: `dj` typewriter digraph NOT mapped to `đ`"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -180,7 +180,7 @@ tests:
       - text: "đak"
         want: "ђак"
 
-  - section: "Serbian Latin → Cyrillic: digit-first words still transliterate (M2)"
+  - section: "Serbian Latin → Cyrillic: digit-first words still transliterate"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -193,7 +193,7 @@ tests:
       - text: "20god od"
         want: "20год од"
 
-  - section: "Serbian Latin → Cyrillic: MIXED-case brand names left untouched (M1)"
+  - section: "Serbian Latin → Cyrillic: MIXED-case brand names left untouched"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -211,7 +211,7 @@ tests:
       # brand names; the entire word is a Serbian phrase written weirdly.
       # Those remain in their own section (edge_cases).
 
-  - section: "Serbian Latin → Cyrillic: URLs/emails/handles preserved (B3)"
+  - section: "Serbian Latin → Cyrillic: URLs/emails/handles preserved"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -232,7 +232,7 @@ tests:
       - text: "prati @novisad danas"
         want: "прати @novisad данас"
 
-  - section: "Serbian Latin → Cyrillic: Roman false-positives (B2)"
+  - section: "Serbian Latin → Cyrillic: Roman false-positives"
     source: srp-latn
     target: srp-cyrl
     cases:
@@ -285,7 +285,7 @@ tests:
       - text: 'bend „AC/DC"'
         want: 'бенд „AC/DC"'
 
-  - section: "Serbian Latin → Cyrillic: NFD input normalises to NFC first (B1)"
+  - section: "Serbian Latin → Cyrillic: NFD input normalises to NFC first"
     source: srp-latn
     target: srp-cyrl
     cases:
