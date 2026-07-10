@@ -16,7 +16,10 @@ from typing import TypedDict
 import yaml
 
 from . import case, roman
+from .letters import LetterMap
 from .protection import ProtectedRegions
+
+_MIXED_CASE_CUTOFF = 2
 
 
 class RuleData(TypedDict, total=False):
@@ -34,22 +37,17 @@ class _RulesFile(TypedDict):
     rules: list[RuleData]
 
 
-_DIGRAPH_WIDTH = 2
-_SINGLE_WIDTH = 1
-_LOOKUP_WIDTHS = (_DIGRAPH_WIDTH, _SINGLE_WIDTH)
-
-
 class Rule:
     def __init__(self, data: RuleData) -> None:
-        self.source: str = data["source"]
-        self.target: str = data["target"]
-        self.digraphs: dict[str, str] = {k.lower(): v for k, v in data.get("digraphs", {}).items()}
+        self.letters = LetterMap(
+            digraphs={k.lower(): v for k, v in data.get("digraphs", {}).items()},
+            singles=data.get("singles") or {},
+        )
         self.pre_char: dict[str, str] = data.get("pre_char") or {}
-        self.singles: dict[str, str] = data.get("singles") or {}
-        self.extras_in_word: str = data.get("extras_in_word") or ""
         self.non_native_letters: set[str] = set(data.get("non_native_letters") or "")
         self.never_roman: set[str] = {w.upper() for w in data.get("never_roman") or []}
-        self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(self.extras_in_word)}]+)")
+        extras = data.get("extras_in_word") or ""
+        self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(extras)}]+)")
 
     def apply(self, text: str) -> str:
         # macOS clipboard hands out NFD; the base ASCII would leak through
@@ -84,11 +82,10 @@ class Rule:
         # cannot survive a lowercased conversion; the round-trip loses
         # its casing. Two-char MIXED (`lJ`, `nJ`) is the digraph edge
         # case we do want to convert.
-        if pattern is case.CasePattern.MIXED and len(word) > _DIGRAPH_WIDTH:
+        if pattern is case.CasePattern.MIXED and len(word) > _MIXED_CASE_CUTOFF:
             return word
 
-        mapped = self._map_letters(word.lower())
-        return case.apply(mapped, pattern)
+        return case.apply(self.letters.convert(word.lower()), pattern)
 
     def _is_foreign_inclusion(self, word: str) -> bool:
         return bool(self.non_native_letters and self.non_native_letters.intersection(word))
@@ -100,25 +97,6 @@ class Rule:
         if not self.pre_char:
             return word
         return "".join(self.pre_char.get(ch, ch) for ch in word)
-
-    def _map_letters(self, lowered: str) -> str:
-        result: list[str] = []
-        i = 0
-        while i < len(lowered):
-            replacement, width = self._match_here(lowered, i)
-            result.append(replacement)
-            i += width
-        return "".join(result)
-
-    def _match_here(self, lowered: str, i: int) -> tuple[str, int]:
-        for width in _LOOKUP_WIDTHS:
-            if i + width > len(lowered):
-                continue
-            candidate = lowered[i : i + width]
-            if candidate in self.digraphs:
-                return self.digraphs[candidate], width
-        ch = lowered[i]
-        return self.singles.get(ch, ch), 1
 
 
 def _rules_table() -> dict[tuple[str, str], Rule]:
