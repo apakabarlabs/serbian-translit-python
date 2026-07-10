@@ -97,7 +97,6 @@ ignore = [
     "ISC001",  # implicit-string-concat, conflicts with formatter
     "PLR2004", # magic value, noisy for width literals like `for width in (2, 1)`
     "TRY003",  # long messages inside exception class, fine here
-    "S101",    # use of assert, pytest tests are all assert
     # This library exists to distinguish Cyrillic vs Latin lookalikes.
     # `с` vs `c` in a comment is the whole point; ruff's ambiguous-char
     # warnings would fire on every meaningful docstring.
@@ -105,6 +104,9 @@ ignore = [
     "RUF002",  # ambiguous unicode in docstring
     "RUF003",  # ambiguous unicode in comment
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # pytest tests are all assert
 
 [tool.ruff.format]
 quote-style = "double"
