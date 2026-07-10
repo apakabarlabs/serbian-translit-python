@@ -36,7 +36,7 @@ Issues = "https://github.com/apakabarlabs/serbian-translit-python/issues"
 include = ["serbian_translit*"]
 
 [tool.setuptools.package-data]
-serbian_translit = ["data/*.yaml"]
+serbian_translit = ["data/rules.yaml"]
 
 # Single source of truth for the version. `__init__.py.__version__` is
 # resolved at build time by setuptools; runtime code reads the same
@@ -103,7 +103,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.pytest.ini_options]
-testpaths = ["serbian_translit"]
+testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = [
     "--strict-markers",
@@ -115,7 +115,7 @@ python_version = "3.10"
 strict = true
 warn_unreachable = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-files = ["serbian_translit"]
+files = ["serbian_translit", "tests"]
 
 [[tool.mypy.overrides]]
 module = ["yaml"]

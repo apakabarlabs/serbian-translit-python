@@ -6,13 +6,13 @@ test:
 	venv/bin/pytest --cov
 
 lint:
-	venv/bin/ruff check serbian_translit
-	venv/bin/ruff format --check serbian_translit
-	venv/bin/mypy serbian_translit
+	venv/bin/ruff check serbian_translit tests
+	venv/bin/ruff format --check serbian_translit tests
+	venv/bin/mypy serbian_translit tests
 
 format:
-	venv/bin/ruff check --fix serbian_translit
-	venv/bin/ruff format serbian_translit
+	venv/bin/ruff check --fix serbian_translit tests
+	venv/bin/ruff format serbian_translit tests
 
 wheel-smoke:
 	rm -rf dist

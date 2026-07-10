@@ -17,7 +17,7 @@ _ROUTES: dict[tuple[str, str], Callable[[str], str]] = {
 
 
 def load_test_cases() -> list[tuple[str, str, str, str, str]]:
-    path = Path(__file__).parent / "data" / "tests.yaml"
+    path = Path(__file__).parent / "tests.yaml"
     with path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f)
     return [
