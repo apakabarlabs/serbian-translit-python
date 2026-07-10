@@ -14,10 +14,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - name: Install ruff + mypy
+      - name: Install ruff + mypy + test deps
         run: |
           python -m pip install --upgrade pip
-          pip install -e . ruff mypy types-PyYAML
+          # pytest is here so mypy can see its symbols in test files —
+          # strict mode chokes on unstubbed pytest.mark.parametrize otherwise.
+          pip install -e . ruff mypy types-PyYAML pytest
       - name: Ruff check
         run: ruff check serbian_translit
       - name: Ruff format check
