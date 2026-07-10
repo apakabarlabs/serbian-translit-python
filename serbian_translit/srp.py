@@ -9,8 +9,10 @@ _CYR_TO_LAT = load("srp-cyrl", "srp-latn")
 
 
 def to_cyr(text: str) -> str:
+    """Serbian Latin → Cyrillic."""
     return _LAT_TO_CYR.apply(text)
 
 
 def to_lat(text: str) -> str:
+    """Serbian Cyrillic → Latin."""
     return _CYR_TO_LAT.apply(text)

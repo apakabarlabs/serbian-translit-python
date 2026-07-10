@@ -11,8 +11,10 @@ _CYR_TO_LAT = load("cnr-cyrl", "cnr-latn")
 
 
 def to_cyr(text: str) -> str:
+    """Montenegrin Latin → Cyrillic."""
     return _LAT_TO_CYR.apply(text)
 
 
 def to_lat(text: str) -> str:
+    """Montenegrin Cyrillic → Latin."""
     return _CYR_TO_LAT.apply(text)
