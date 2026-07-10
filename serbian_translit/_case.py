@@ -27,10 +27,12 @@ def detect(text: str) -> CasePattern:
 
 
 def apply(text: str, pattern: CasePattern) -> str:
-    if pattern is CasePattern.LOWER:
-        return text.lower()
-    if pattern is CasePattern.UPPER:
-        return text.upper()
-    if pattern is CasePattern.TITLE and text:
-        return text[0].upper() + text[1:].lower()
-    return text
+    match pattern:
+        case CasePattern.LOWER:
+            return text.lower()
+        case CasePattern.UPPER:
+            return text.upper()
+        case CasePattern.TITLE:
+            return text[0].upper() + text[1:].lower()
+        case CasePattern.MIXED:
+            return text
