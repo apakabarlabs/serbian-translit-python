@@ -1,4 +1,5 @@
 [![Tests](https://github.com/apakabarlabs/serbian-translit-python/actions/workflows/tests.yml/badge.svg)](https://github.com/apakabarlabs/serbian-translit-python/actions/workflows/tests.yml)
+[![Documentation](https://github.com/apakabarlabs/serbian-translit-python/actions/workflows/documentation.yml/badge.svg)](https://apakabarlabs.github.io/serbian-translit-python/serbian_translit.html)
 
 # serbian-translit
 
@@ -46,6 +47,10 @@ cnr.to_lat("с́евер")             # 'śever'
 ## Rules and tests
 
 Rules live in [`serbian_translit/data/rules.yaml`](serbian_translit/data/rules.yaml); test cases in [`tests/tests.yaml`](tests/tests.yaml). Both files are the source of truth shared with the [Swift](https://github.com/apakabarlabs/serbian-translit-swift) and (upcoming) Kotlin ports so behaviour stays identical across languages.
+
+## Documentation
+
+The [API reference](https://apakabarlabs.github.io/serbian-translit-python/serbian_translit.html) is generated from the public Python API and deployed by GitHub Actions.
 
 ## Lines of Code
 

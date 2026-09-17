@@ -6,6 +6,9 @@ install:
 test:
 	venv/bin/pytest --cov --cov-report=term-missing
 
+docs:
+	venv/bin/pdoc serbian_translit -o build/docs
+
 lint:
 	venv/bin/ruff check serbian_translit tests
 	venv/bin/ruff format --check serbian_translit tests
