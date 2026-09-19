@@ -30,12 +30,18 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
+    - name: Set up tool Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+
+    - run: make install-tools
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
 
-    - run: make install-tools
     - run: make install
     - run: make test
 
