@@ -5,8 +5,6 @@ from __future__ import annotations
 import re
 import uuid
 
-# Quotes pair asymmetrically (an opener owns one specific closer).
-# A symmetric character class would happily pair `»…«` or `„…„`.
 _QUOTED_RE = re.compile(
     r"„[^„”“]*?[”“\"]"
     r"|«[^«»]*?»"
@@ -29,13 +27,9 @@ class ProtectedRegions:
     def __init__(self) -> None:
         self._slots: dict[str, str] = {}
         self._counter = 0
-        # Per-instance prefix so a user substring cannot spoof a slot key
-        # and concurrent calls cannot alias each other's tables.
         self._prefix = uuid.uuid4().hex
 
     def stash_all(self, text: str) -> str:
-        # URL tokens first so their inner punctuation cannot be mistaken
-        # for a quote-region boundary in the second pass.
         text = _TOKEN_RE.sub(self._stash, text)
         return _QUOTED_RE.sub(self._stash, text)
 

@@ -35,11 +35,13 @@ dev = [
     "mypy>=1.10",
     "types-PyYAML>=6.0",
     "build>=1.0",
+    "twine>=6.0",
     "pdoc>=16.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/apakabarlabs/serbian-translit-python"
+Documentation = "https://apakabarlabs.github.io/serbian-translit-python/serbian_translit.html"
 Changelog = "https://github.com/apakabarlabs/serbian-translit-python/blob/main/CHANGELOG.md"
 Issues = "https://github.com/apakabarlabs/serbian-translit-python/issues"
 

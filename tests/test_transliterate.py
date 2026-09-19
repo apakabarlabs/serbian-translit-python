@@ -6,8 +6,6 @@ import yaml
 
 from serbian_translit import cnr, srp
 
-# Every port resolves (source, target) to its own call shape. Python's
-# is a two-level module.function lookup; Swift/Kotlin use their own.
 _ROUTES: dict[tuple[str, str], Callable[[str], str]] = {
     ("srp-latn", "srp-cyrl"): srp.to_cyr,
     ("srp-cyrl", "srp-latn"): srp.to_lat,

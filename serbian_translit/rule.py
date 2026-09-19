@@ -40,8 +40,6 @@ class Rule:
         self.word_split_re = re.compile(rf"(\s+|[^\w{re.escape(extras)}]+)")
 
     def apply(self, text: str) -> str:
-        # macOS clipboard hands out NFD; the base ASCII would leak through
-        # the digraph lookup and drop its combining mark.
         text = unicodedata.normalize("NFC", text)
 
         protection = ProtectedRegions()
@@ -59,13 +57,9 @@ class Rule:
         if self.skip.is_foreign(word) or self.skip.is_roman_numeral(word):
             return word
 
-        # Ð/Đ and ð/đ collapse before we look at case, so the character
-        # count of the word is stable for the case-pattern step.
         word = self._normalise_pre_char(word)
 
         pattern = case.detect(word)
-        # Brands/acronyms (`iPhone`, `mRNA`) lose their casing on lowercase
-        # round-trip. Two-char MIXED (`lJ`, `nJ`) is the digraph edge case.
         if pattern is case.CasePattern.MIXED and len(word) > _MIXED_CASE_CUTOFF:
             return word
 

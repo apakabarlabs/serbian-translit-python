@@ -1,0 +1,7 @@
+documentation: https://apakabarlabs.github.io/serbian-translit-python/serbian_translit.html
+
+skip:
+  - .tools/
+  - build/
+  - dist/
+  - venv/

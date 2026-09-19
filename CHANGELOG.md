@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.2
+
+### Tests
+
+- The shared corpus now covers quoted punctuation inside protected URLs and
+  single-letter Serbian words that resemble Roman numerals.
+
+### Distribution
+
+- The Python package is published to PyPI by the release workflow.
+
 ## 0.4.1
 
 Internal refactor only. Public API and behaviour unchanged; drop-in
