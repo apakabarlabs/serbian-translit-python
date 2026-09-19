@@ -222,6 +222,8 @@ tests:
         want: "www.beograd.rs је ту"
       - text: "http://kod.hr link"
         want: "http://kod.hr линк"
+      - text: 'idi https://primer.rs/"reci" sada'
+        want: 'иди https://primer.rs/"reci" сада'
       # Email addresses: user@host untouched, surrounding text converts.
       - text: "info@beograd.rs sada"
         want: "info@beograd.rs сада"
@@ -258,6 +260,10 @@ tests:
         want: "II век"
       - text: "MCMLXXXIV"
         want: "MCMLXXXIV"
+      - text: "I ja"
+        want: "И ја"
+      - text: "V redu"
+        want: "В реду"
 
   - section: "Serbian Latin → Cyrillic: Đ variants (U+0110 / U+00D0)"
     source: srp-latn
