@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.3
+
+No runtime behaviour changes.
+
+### Fixed
+
+- The lines-of-code graph and the links to the rules and test files in the
+  README now work on PyPI.
+
 ## 0.4.2
 
 ### Tests
