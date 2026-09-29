@@ -42,7 +42,7 @@ cnr.to_lat("с́евер")             # 'śever'
 
 ## Rules and tests
 
-Rules live in [`serbian_translit/data/rules.yaml`](serbian_translit/data/rules.yaml); test cases in [`tests/tests.yaml`](tests/tests.yaml). Both files are the source of truth shared with the [Swift](https://github.com/apakabarlabs/serbian-translit-swift) and (upcoming) Kotlin ports so behaviour stays identical across languages.
+Rules live in [`serbian_translit/data/rules.yaml`](https://github.com/apakabarlabs/serbian-translit-python/blob/main/serbian_translit/data/rules.yaml); test cases in [`tests/tests.yaml`](https://github.com/apakabarlabs/serbian-translit-python/blob/main/tests/tests.yaml). Both files are the source of truth shared with the [Swift](https://github.com/apakabarlabs/serbian-translit-swift) and (upcoming) Kotlin ports so behaviour stays identical across languages.
 
 ## Documentation
 
@@ -51,7 +51,7 @@ The [API reference](https://apakabarlabs.github.io/serbian-translit-python/serbi
 ## Lines of Code
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/loc-history-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset=".github/loc-history-light.svg">
-  <img alt="Lines of Code graph" src=".github/loc-history-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/apakabarlabs/serbian-translit-python/main/.github/loc-history-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/apakabarlabs/serbian-translit-python/main/.github/loc-history-light.svg">
+  <img alt="Lines of Code graph" src="https://raw.githubusercontent.com/apakabarlabs/serbian-translit-python/main/.github/loc-history-light.svg">
 </picture>
