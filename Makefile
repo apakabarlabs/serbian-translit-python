@@ -46,7 +46,7 @@ wheel-smoke:
 	rm -rf /tmp/serbian-translit-smoke
 	python3 -m venv /tmp/serbian-translit-smoke
 	/tmp/serbian-translit-smoke/bin/pip install dist/*.whl
-	/tmp/serbian-translit-smoke/bin/python -c "\
+	/tmp/serbian-translit-smoke/bin/python -I -c "\
 import serbian_translit; \
 from serbian_translit import srp, cnr; \
 assert serbian_translit.__version__; \
