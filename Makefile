@@ -1,6 +1,10 @@
 .DEFAULT_GOAL := build
 
-.PHONY: install install-tools build test docs comments lint format wheel-smoke clean
+.PHONY: install install-tools build test docs comments lint format wheel-smoke clean sync-yaml
+
+sync-yaml:
+	cp serbian_translit/data/rules.yaml ../serbian-translit-swift/Sources/SerbianTranslit/Resources/
+	cp tests/tests.yaml ../serbian-translit-swift/Tests/SerbianTranslitTests/Resources/
 
 install:
 	python3 -m venv venv
