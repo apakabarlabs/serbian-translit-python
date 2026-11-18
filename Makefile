@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := build
 
-.PHONY: install install-tools build test docs comments lint format wheel-smoke clean sync-yaml
+.PHONY: install install-tools build test docs comments lint format wheel-smoke sync-yaml
 
 sync-yaml:
 	cp serbian_translit/data/rules.yaml ../serbian-translit-swift/Sources/SerbianTranslit/Resources/
@@ -35,9 +35,6 @@ format:
 build: lint test docs
 	venv/bin/python -m build
 	venv/bin/python -m twine check dist/*
-
-clean:
-	rm -rf build dist *.egg-info .pytest_cache .ruff_cache
 
 wheel-smoke:
 	rm -rf build dist
